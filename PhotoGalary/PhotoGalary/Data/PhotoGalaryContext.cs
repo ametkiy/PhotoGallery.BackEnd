@@ -15,8 +15,22 @@ namespace PhotoGalary.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-                optionsBuilder.UseSqlServer("Server=.\\SQLExpress; DataBase=PhotoGalary; trusted_connection=true;");
+           // if (!optionsBuilder.IsConfigured)
+             //   optionsBuilder.UseSqlServer("Server=.\\SQLExpress; DataBase=PhotoGalary; trusted_connection=true;");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Album>()
+                .ToTable("Albums").HasKey(p => p.Id);
+            modelBuilder.Entity<Album>()
+                .Property(p => p.Title).IsRequired().HasMaxLength(80);
+
+
+            modelBuilder.Entity<Photo>()
+                .ToTable("Photos").HasKey(p => p.Id);
+            modelBuilder.Entity<Photo>()
+                .Property(p => p.FileName).IsRequired().HasMaxLength(260);
         }
     }
 }

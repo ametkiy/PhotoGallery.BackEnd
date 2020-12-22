@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhotoGalary.Data;
 
-namespace PhotoGalary.Migrations
+namespace PhotoGallery.Migrations
 {
     [DbContext(typeof(PhotoGalaryContext))]
     partial class PhotoGalaryContextModelSnapshot : ModelSnapshot
@@ -17,19 +17,19 @@ namespace PhotoGalary.Migrations
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.0");
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("PhotoGalary.Model.Album", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
 
@@ -40,21 +40,24 @@ namespace PhotoGalary.Migrations
 
             modelBuilder.Entity("PhotoGalary.Model.Photo", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("AddDate")
-                        .HasColumnType("DateTime2");
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("AlbumId")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("AlbumId1")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileName")
+                        .IsRequired()
                         .HasMaxLength(260)
                         .HasColumnType("nvarchar(260)");
 
@@ -63,7 +66,7 @@ namespace PhotoGalary.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AlbumId");
+                    b.HasIndex("AlbumId1");
 
                     b.ToTable("Photos");
                 });
@@ -72,7 +75,7 @@ namespace PhotoGalary.Migrations
                 {
                     b.HasOne("PhotoGalary.Model.Album", "Album")
                         .WithMany("Photos")
-                        .HasForeignKey("AlbumId");
+                        .HasForeignKey("AlbumId1");
 
                     b.Navigation("Album");
                 });

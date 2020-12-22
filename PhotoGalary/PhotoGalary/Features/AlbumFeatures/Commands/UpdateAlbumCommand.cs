@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace PhotoGalary.Features.AlbumFeatures.Commands
 {
-    public class UpdateAlbumCommand : IRequest<int>
+    public class UpdateAlbumCommand : IRequest<Guid>
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public class UpdateAlbumCommandHandler : IRequestHandler<UpdateAlbumCommand, int>
+        public class UpdateAlbumCommandHandler : IRequestHandler<UpdateAlbumCommand, Guid>
         {
             private readonly IPhotoGalaryContext _context;
             public UpdateAlbumCommandHandler(IPhotoGalaryContext context)
             {
                 _context = context;
             }
-            public async Task<int> Handle(UpdateAlbumCommand command, CancellationToken cancellationToken)
+            public async Task<Guid> Handle(UpdateAlbumCommand command, CancellationToken cancellationToken)
             {
                 var album = _context.Albums.Where(a => a.Id == command.Id).FirstOrDefault();
 

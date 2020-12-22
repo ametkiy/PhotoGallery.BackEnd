@@ -1,15 +1,12 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using PhotoGalary.Features.PhotoFeatures.Commands;
 using PhotoGalary.Features.PhotoFeatures.Queries;
-using PhotoGalary.Model;
+using PhotoGallery;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PhotoGalary.Controllers
@@ -32,52 +29,31 @@ namespace PhotoGalary.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(Guid id)
         {
             return Ok(await _mediator.Send(new GetPhotoByIdQuery { Id = id }));
         }
 
-        public class Temp
-        {
-            [JsonProperty(PropertyName = "FileName")]
-            string FileName { get; set; }
-
-            [JsonProperty(PropertyName = "Description")] string Description { get; set; }
-        }
-
         [HttpPost, DisableRequestSizeLimit]
-        public async Task<IActionResult> Create([FromForm] IFormFile File, [FromForm] string tmp)
+        public async Task<IActionResult> Create([FromForm] IFormFileCollection Files)
         {
 
             CreatePhotoCommand command = new CreatePhotoCommand();
-            if (File!=null && File.Length > 0)
-            {
-                using (var ms = new MemoryStream())
-                {
-                    File.CopyTo(ms);
-                    var fileBytes = ms.ToArray();
-                    command.PhotoData = fileBytes; 
-                   
-                }
-                command.FileName = File.FileName;
-                command.AddDate = DateTime.Now;
-                if (command.PhotoData != null && command.FileName != "")
-                    return Ok(await _mediator.Send(command));
-                else
-                    return BadRequest();
-            }
+            var result = (await _mediator.Send(new CreatePhotoCommand { FormFiles = Files }));
+            if (result!=null)
+                return Ok(result);
             else
                 return BadRequest();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             return Ok(await _mediator.Send(new DeletePhotoByIdCommand { Id = id }));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdatePhotoCommand command)
+        public async Task<IActionResult> Update(Guid id, UpdatePhotoCommand command)
         {
             if (id != command.Id)
             {

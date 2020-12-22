@@ -32,17 +32,17 @@ namespace PhotoGalary.Controllers
             return Ok(await _mediator.Send(new GetAllAlbumsQuery()));
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(Guid id)
         {
             return Ok(await _mediator.Send(new GetAlbumByIdQuery { Id = id }));
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             return Ok(await _mediator.Send(new DeleteAlbumByIdCommand { Id = id }));
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateAlbumCommand command)
+        public async Task<IActionResult> Update(Guid id, UpdateAlbumCommand command)
         {
             if (id != command.Id)
             {

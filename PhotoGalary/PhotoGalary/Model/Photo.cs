@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace PhotoGalary.Model
 {
-    public class Photo : Base
+    public class Photo : BaseModel
     {
-        [MaxLength(260)]
+        //[MaxLength(260)]
         public string FileName { get; set; }
         public string Description { get; set; }
 
@@ -17,7 +17,7 @@ namespace PhotoGalary.Model
         public Album Album { get; set; }
 
         public byte[] PhotoData { get; set; }
-        [Column(TypeName = "DateTime2")]
+        //[Column(TypeName = "DateTime2")]
         public DateTime AddDate { get; set; }
     }
 }

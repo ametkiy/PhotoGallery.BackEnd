@@ -12,7 +12,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Queries
 {
     public class GetPhotoByIdQuery : IRequest<Photo>
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public class GetPhotoByIdQueryHandler : IRequestHandler<GetPhotoByIdQuery, Photo>
         {
             private readonly IPhotoGalaryContext _context;

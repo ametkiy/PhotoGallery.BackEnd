@@ -12,7 +12,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Queries
 {
     public class GetAlbumByIdQuery : IRequest<Album>
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public class GetAlbumByIdQueryHandler : IRequestHandler<GetAlbumByIdQuery, Album>
         {
