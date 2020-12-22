@@ -23,7 +23,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
                 var photo = await _context.Photos.Where(a => a.Id == command.Id).FirstOrDefaultAsync();
                 if (photo == null) return default;
                 _context.Photos.Remove(photo);
-                await _context.SaveChanges();
+                await _context.SaveChangesAsync(cancellationToken);
                 return photo.Id;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PhotoGalary.Data;
 using PhotoGalary.Model;
 using System;
@@ -21,7 +22,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Queries
             }
             public async Task<Photo> Handle(GetPhotoByIdQuery query, CancellationToken cancellationToken)
             {
-                var photo = _context.Photos.Where(a => a.Id == query.Id).FirstOrDefault();
+                var photo =  await _context.Photos.Where(a => a.Id == query.Id).FirstOrDefaultAsync();
                 if (photo == null) return null;
                 return photo;
             }

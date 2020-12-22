@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhotoGalary.Model;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PhotoGalary.Data
@@ -9,6 +10,6 @@ namespace PhotoGalary.Data
         DbSet<Album> Albums { get; set; }
         DbSet<Photo> Photos { get; set; }
 
-        Task<int> SaveChanges();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

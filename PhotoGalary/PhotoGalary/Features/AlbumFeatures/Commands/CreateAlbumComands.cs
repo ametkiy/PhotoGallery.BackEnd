@@ -27,7 +27,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
                 album.Title = command.Title;
                 album.Description = command.Description;
                 _context.Albums.Add(album);
-                await _context.SaveChanges();
+                await _context.SaveChangesAsync(cancellationToken);
                 return album.Id;
             }
         }

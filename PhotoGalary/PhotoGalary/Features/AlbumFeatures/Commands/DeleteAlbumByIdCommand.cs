@@ -22,7 +22,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
                 var album = await _context.Albums.Where(a => a.Id == command.Id).FirstOrDefaultAsync();
                 if (album == null) return default;
                 _context.Albums.Remove(album);
-                await _context.SaveChanges();
+                await _context.SaveChangesAsync(cancellationToken);
                 return album.Id;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PhotoGalary.Data;
 using PhotoGalary.Model;
 using System;
@@ -22,7 +23,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Queries
             }
             public async Task<Album> Handle(GetAlbumByIdQuery query, CancellationToken cancellationToken)
             {
-                var album = _context.Albums.Where(a => a.Id == query.Id).FirstOrDefault();
+                var album =  await _context.Albums.Where(a => a.Id == query.Id).FirstOrDefaultAsync();
                 if (album == null) return null;
                 return album;
             }

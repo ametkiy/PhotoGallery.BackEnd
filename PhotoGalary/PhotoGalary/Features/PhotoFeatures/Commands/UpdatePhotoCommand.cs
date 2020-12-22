@@ -32,7 +32,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
                 {
                     photo.Description = command.Description;
                     //photo.AlbumId = command.AlbumId;
-                    await _context.SaveChanges();
+                    await _context.SaveChangesAsync(cancellationToken);
                     return photo.Id;
                 }
             }

@@ -37,7 +37,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
                 photo.PhotoData = command.PhotoData;
                 photo.AddDate = command.AddDate;
                 _context.Photos.Add(photo);
-                await _context.SaveChanges();
+                await _context.SaveChangesAsync(cancellationToken);
                 return photo.Id;
             }
         }

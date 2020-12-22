@@ -13,11 +13,6 @@ namespace PhotoGalary.Data
             : base(options)
         { }
 
-        public async Task<int> SaveChanges()
-        {
-            return await base.SaveChangesAsync();
-        }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
