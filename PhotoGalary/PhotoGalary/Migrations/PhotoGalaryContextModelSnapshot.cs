@@ -47,10 +47,7 @@ namespace PhotoGallery.Migrations
                     b.Property<DateTime>("AddDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("AlbumId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("AlbumId1")
+                    b.Property<Guid?>("AlbumId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -66,7 +63,7 @@ namespace PhotoGallery.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AlbumId1");
+                    b.HasIndex("AlbumId");
 
                     b.ToTable("Photos");
                 });
@@ -75,7 +72,7 @@ namespace PhotoGallery.Migrations
                 {
                     b.HasOne("PhotoGalary.Model.Album", "Album")
                         .WithMany("Photos")
-                        .HasForeignKey("AlbumId1");
+                        .HasForeignKey("AlbumId");
 
                     b.Navigation("Album");
                 });

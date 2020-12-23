@@ -31,6 +31,7 @@ namespace PhotoGalary.Data
                 .ToTable("Photos").HasKey(p => p.Id);
             modelBuilder.Entity<Photo>()
                 .Property(p => p.FileName).IsRequired().HasMaxLength(260);
+ 
         }
     }
 }

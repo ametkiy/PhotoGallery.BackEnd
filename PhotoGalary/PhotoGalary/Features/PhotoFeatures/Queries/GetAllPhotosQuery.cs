@@ -25,13 +25,14 @@ namespace PhotoGalary.Features.PhotoFeatures.Queries
             public async Task<PageOfPhoto> Handle(GetAllPhotosQuery request, CancellationToken cancellationToken)
             {
                 PageOfPhoto pageOfPhoto = new PageOfPhoto();
-                //var photoList = await _context.Photos.ToListAsync();
-                var photoList = await _context.Photos.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).ToListAsync();
+                var photoList = await _context.Photos.Skip((request.Page - 1) * request.PageSize)
+                    .Take(request.PageSize)
+                    .OrderBy(p => p.AddDate)
+                    .ToListAsync();
                 if (photoList == null)
                     return null;
                 else
                 {
-
                     pageOfPhoto.Photos = photoList.ToArray();
                     pageOfPhoto.Count = await _context.Photos.CountAsync();
                     pageOfPhoto.PageSize = request.PageSize;

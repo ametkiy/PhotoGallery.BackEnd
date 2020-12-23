@@ -35,8 +35,8 @@ namespace PhotoGalary
             services.AddControllers();
             services.AddDbContext<PhotoGalaryContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly(typeof(PhotoGalaryContext).Assembly.FullName)));
+                    Configuration.GetConnectionString("DefaultConnection")));//,
+                    //b => b.MigrationsAssembly(typeof(PhotoGalaryContext).Assembly.FullName)));
             services.AddScoped<IPhotoGalaryContext>(provider => provider.GetService<PhotoGalaryContext>());
 
             services.AddMediatR(Assembly.GetExecutingAssembly());

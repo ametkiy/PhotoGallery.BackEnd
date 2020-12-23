@@ -25,23 +25,26 @@ namespace PhotoGalary.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll(int pageSize=5,  int page=1 )
         {
-            return Ok(await _mediator.Send(new GetAllPhotosQuery { Page= page, PageSize=pageSize}));;
+            var result = await _mediator.Send(new GetAllPhotosQuery { Page = page, PageSize = pageSize });
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            return Ok(await _mediator.Send(new GetPhotoByIdQuery { Id = id }));
+            var result = await _mediator.Send(new GetPhotoByIdQuery { Id = id });
+            return Ok(result);
         }
 
         [HttpPost, DisableRequestSizeLimit]
         public async Task<IActionResult> Create([FromForm] IFormFileCollection Files)
         {
+            if (Files.Count > 0)
+            {
+                var result = (await _mediator.Send(new CreatePhotoCommand { FormFiles = Files }));
 
-            CreatePhotoCommand command = new CreatePhotoCommand();
-            var result = (await _mediator.Send(new CreatePhotoCommand { FormFiles = Files }));
-            if (result!=null)
                 return Ok(result);
+            }
             else
                 return BadRequest();
         }
@@ -49,7 +52,8 @@ namespace PhotoGalary.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            return Ok(await _mediator.Send(new DeletePhotoByIdCommand { Id = id }));
+            var result = await _mediator.Send(new DeletePhotoByIdCommand { Id = id });
+            return Ok(result);
         }
 
         [HttpPut("{id}")]

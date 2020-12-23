@@ -27,8 +27,7 @@ namespace PhotoGallery.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FileName = table.Column<string>(type: "nvarchar(260)", maxLength: 260, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AlbumId = table.Column<int>(type: "int", nullable: true),
-                    AlbumId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AlbumId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PhotoData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     AddDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -36,17 +35,17 @@ namespace PhotoGallery.Migrations
                 {
                     table.PrimaryKey("PK_Photos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Photos_Albums_AlbumId1",
-                        column: x => x.AlbumId1,
+                        name: "FK_Photos_Albums_AlbumId",
+                        column: x => x.AlbumId,
                         principalTable: "Albums",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Photos_AlbumId1",
+                name: "IX_Photos_AlbumId",
                 table: "Photos",
-                column: "AlbumId1");
+                column: "AlbumId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

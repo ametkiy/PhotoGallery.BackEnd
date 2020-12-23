@@ -21,11 +21,9 @@ namespace PhotoGalary.Features.AlbumFeatures.Queries
             }
             public async Task<IEnumerable<Album>> Handle(GetAllAlbumsQuery request, CancellationToken cancellationToken)
             {
-                var albumList = await _context.Albums.ToListAsync();
-                if (albumList == null)
-                    return null;
-                else
-                    return albumList.AsReadOnly();
+                var albumList = await _context.Albums
+                    .ToListAsync();
+                return albumList.AsReadOnly();
             }
         }
     }

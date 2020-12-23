@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using PhotoGalary.Features.AlbumFeatures.Commands;
 using PhotoGalary.Features.AlbumFeatures.Queries;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PhotoGalary.Controllers
@@ -23,32 +21,37 @@ namespace PhotoGalary.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateAlbumCommand command)
         {
-            return Ok(await _mediator.Send(command));
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _mediator.Send(new GetAllAlbumsQuery()));
+            var result = await _mediator.Send(new GetAllAlbumsQuery());
+            return Ok(result);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            return Ok(await _mediator.Send(new GetAlbumByIdQuery { Id = id }));
+            var result = await _mediator.Send(new GetAlbumByIdQuery { Id = id });
+            return Ok(result);
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            return Ok(await _mediator.Send(new DeleteAlbumByIdCommand { Id = id }));
+            var result = await _mediator.Send(new DeleteAlbumByIdCommand { Id = id });
+            return Ok(result);
         }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateAlbumCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
-            return Ok(await _mediator.Send(command));
+            command.Id = id;
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
     }
 }
