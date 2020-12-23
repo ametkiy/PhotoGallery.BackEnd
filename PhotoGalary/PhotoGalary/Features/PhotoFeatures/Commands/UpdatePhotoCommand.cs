@@ -12,7 +12,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
     {
         public Guid Id { get; set; }
         public string Description { get; set; }
-        public int? AlbumId { get; set; }
+        public Guid? AlbumId { get; set; }
         public class UpdatePhotoCommandHandler : IRequestHandler<UpdatePhotoCommand, Guid>
         {
             private readonly IPhotoGalaryContext _context;
@@ -31,7 +31,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
                 else
                 {
                     photo.Description = command.Description;
-                    //photo.AlbumId = command.AlbumId;
+                    photo.AlbumId = command.AlbumId;
                     await _context.SaveChangesAsync(cancellationToken);
                     return photo.Id;
                 }

@@ -63,7 +63,8 @@ namespace PhotoGalary.Controllers
             {
                 return BadRequest();
             }
-            return Ok(await _mediator.Send(command));
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
 
     }
