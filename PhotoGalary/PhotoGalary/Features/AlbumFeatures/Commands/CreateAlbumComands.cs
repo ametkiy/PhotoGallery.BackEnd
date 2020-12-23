@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using PhotoGalary.Data;
 using PhotoGalary.Model;
+using PhotoGallery.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +25,18 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
             }
             public async Task<Guid> Handle(CreateAlbumCommand command, CancellationToken cancellationToken)
             {
-                var album = new Album();
-                album.Title = command.Title;
-                album.Description = command.Description;
+
+                var config = new MapperConfiguration(cfg => cfg.CreateMap<CreateAlbumCommand, Album>());
+                var mapper = new Mapper(config);
+                Album album = mapper.Map<CreateAlbumCommand, Album>(command);
+
+                if(String.IsNullOrEmpty(album.Title) || String.IsNullOrWhiteSpace(album.Title))
+                {
+                    throw new FieldIsEmptyException("Album title must be completed");
+                }
+                //var album = new Album();
+                //album.Title = command.Title;
+                //album.Description = command.Description;
                 _context.Albums.Add(album);
                 await _context.SaveChangesAsync(cancellationToken);
                 return album.Id;
