@@ -3,6 +3,7 @@ using PhotoGalary.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
 {
     public class UpdateAlbumCommand : IRequest<Guid>
     {
+        [JsonIgnore]
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -22,7 +24,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
             }
             public async Task<Guid> Handle(UpdateAlbumCommand command, CancellationToken cancellationToken)
             {
-                var album = _context.Albums.Where(a => a.Id == command.Id).FirstOrDefault();
+                var album = _context.Albums.FirstOrDefault(a => a.Id == command.Id);
 
                 if (album == null)
                 {
