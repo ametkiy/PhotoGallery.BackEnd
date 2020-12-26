@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PhotoGalary.Data;
-using PhotoGalary.Model;
-using System;
+
+using PhotoGallery.Model.DTO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -10,45 +10,30 @@ using System.Threading.Tasks;
 
 namespace PhotoGalary.Features.PhotoFeatures.Queries
 {
-    public class GetAllPhotosQuery : IRequest<PageOfPhoto>
+    public class GetAllPhotosQuery : IRequest<IEnumerable<PhotoDto>>
     {
-        public int PageSize { get; set; }
-        public int Page { get; set; }
-
-        public class GetAllPhotosQueryHandler : IRequestHandler<GetAllPhotosQuery, PageOfPhoto>
+        public class GetAllPhotosQueryHandler : IRequestHandler<GetAllPhotosQuery, IEnumerable<PhotoDto>>
         {
             private readonly IPhotoGalaryContext _context;
             public GetAllPhotosQueryHandler(IPhotoGalaryContext context)
             {
                 _context = context;
             }
-            public async Task<PageOfPhoto> Handle(GetAllPhotosQuery request, CancellationToken cancellationToken)
+            public async Task<IEnumerable<PhotoDto>> Handle(GetAllPhotosQuery request, CancellationToken cancellationToken)
             {
-                PageOfPhoto pageOfPhoto = new PageOfPhoto();
-                var photoList = await _context.Photos.Skip((request.Page - 1) * request.PageSize)
-                    .Take(request.PageSize)
+                var photoList = await _context.Photos
+                    .Select(p => new PhotoDto
+                    {
+                        Id = p.Id,
+                        FileName = p.FileName,
+                        AddDate = p.AddDate
+                    })
                     .OrderBy(p => p.AddDate)
                     .ToListAsync();
-                if (photoList == null)
-                    return null;
-                else
-                {
-                    pageOfPhoto.Photos = photoList.ToArray();
-                    pageOfPhoto.Count = await _context.Photos.CountAsync();
-                    pageOfPhoto.PageSize = request.PageSize;
-                    pageOfPhoto.Page = request.Page;
-                    return pageOfPhoto;
-                }
+
+                return photoList;
+                
             }
         }
-    }
-
-    public class PageOfPhoto
-    {
-        public Photo[] Photos { get; set; }
-        public int Count { get; set; }
-        public int PageSize { get; set; }
-        public int Page { get; set; }
-
     }
 }

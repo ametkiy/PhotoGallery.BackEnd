@@ -22,7 +22,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Queries
             }
             public async Task<Photo> Handle(GetPhotoByIdQuery query, CancellationToken cancellationToken)
             {
-                var photo =  await _context.Photos.Where(a => a.Id == query.Id).FirstOrDefaultAsync();
+                var photo =  await _context.Photos.FirstOrDefaultAsync(a => a.Id == query.Id);
                 if (photo == null) return null;
                 return photo;
             }

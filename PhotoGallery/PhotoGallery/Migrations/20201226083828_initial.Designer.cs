@@ -10,7 +10,7 @@ using PhotoGalary.Data;
 namespace PhotoGallery.Migrations
 {
     [DbContext(typeof(PhotoGalaryContext))]
-    [Migration("20201223073723_initial")]
+    [Migration("20201226083828_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

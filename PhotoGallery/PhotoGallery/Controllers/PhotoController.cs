@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PhotoGalary.Features.PhotoFeatures.Commands;
 using PhotoGalary.Features.PhotoFeatures.Queries;
 using PhotoGallery;
+using PhotoGallery.Features.PhotoFeatures.Queries;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,9 +24,16 @@ namespace PhotoGalary.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(int pageSize=5,  int page=1 )
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(new GetAllPhotosQuery { Page = page, PageSize = pageSize });
+            var result = await _mediator.Send(new GetAllPhotosQuery ());
+            return Ok(result);
+        }
+
+        [HttpGet("{pageSize}/{page}")]
+        public async Task<IActionResult> GetPaginationPhotos(int pageSize=5,  int page=1 )
+        {
+            var result = await _mediator.Send(new GetPaginationPhotosQuery { Page = page, PageSize = pageSize });
             return Ok(result);
         }
 
@@ -59,10 +67,7 @@ namespace PhotoGalary.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdatePhotoCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
+            command.Id = id;
             var result = await _mediator.Send(command);
             return Ok(result);
         }

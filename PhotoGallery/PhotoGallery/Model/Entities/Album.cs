@@ -5,7 +5,6 @@ namespace PhotoGalary.Model
 {
     public class Album : BaseModel
     {
-        //[MaxLength(80)]
         public string Title { get; set; }
         public string Description { get; set; }
 

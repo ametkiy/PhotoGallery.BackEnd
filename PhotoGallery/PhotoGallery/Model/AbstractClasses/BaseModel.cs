@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PhotoGalary.Model
 {
-    public class BaseModel
+    public abstract class BaseModel
     {
         public Guid Id { get; set; }
     }

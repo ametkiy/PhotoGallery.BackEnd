@@ -34,9 +34,6 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
                 {
                     throw new FieldIsEmptyException("Album title must be completed");
                 }
-                //var album = new Album();
-                //album.Title = command.Title;
-                //album.Description = command.Description;
                 _context.Albums.Add(album);
                 await _context.SaveChangesAsync(cancellationToken);
                 return album.Id;

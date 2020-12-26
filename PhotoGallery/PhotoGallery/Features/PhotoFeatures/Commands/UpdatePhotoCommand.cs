@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using PhotoGalary.Data;
+using PhotoGallery.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
 
                 if (photo == null)
                 {
-                    return default;
+                    throw new PhotoNotFoundException(command.Id);
                 }
                 else
                 {
