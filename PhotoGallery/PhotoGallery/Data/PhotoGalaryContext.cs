@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhotoGalary.Model;
+using System;
 using System.Threading.Tasks;
 
 namespace PhotoGalary.Data
@@ -32,7 +33,7 @@ namespace PhotoGalary.Data
             modelBuilder.Entity<Photo>()
                 .Property(p => p.FileName).IsRequired().HasMaxLength(260);
             modelBuilder.Entity<Photo>()
-                .HasOne(p => p.Album)
+                .HasOne<Album>(p => p.Album)
                 .WithMany(t => t.Photos)
                 .HasForeignKey(p => p.AlbumId);
         }

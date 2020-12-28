@@ -15,11 +15,12 @@ using PhotoGallery.Exceptions;
 
 namespace PhotoGalary.Features.PhotoFeatures.Commands
 {
-    public class CreatePhotoCommand : IRequest<CreatePhotoResult>
+    public class CreatePhotoCommand : IRequest<IEnumerable<Guid>>
     {
         public IFormFileCollection FormFiles;
+        public Guid? AlbumId { get; set; }
 
-        public class CreatePhotoCommandHandler : IRequestHandler<CreatePhotoCommand, CreatePhotoResult>
+        public class CreatePhotoCommandHandler : IRequestHandler<CreatePhotoCommand, IEnumerable<Guid>>
         {
             private readonly IPhotoGalaryContext _context;
             private readonly IConfiguration _config;
@@ -29,16 +30,15 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
                 _config = config;
             }
 
-            public async Task<CreatePhotoResult> Handle(CreatePhotoCommand command, CancellationToken cancellationToken)
+            public async Task<IEnumerable<Guid>> Handle(CreatePhotoCommand command, CancellationToken cancellationToken)
             {
-                CreatePhotoResult createPhotoResult = new CreatePhotoResult();
                 List<Photo> photos = new List<Photo>();
                 var fileSizeLimit = _config.GetValue<long>("FileSizeLimit");
 
                 foreach (var file in command.FormFiles)
                 {
-                    try
-                    {
+                    //try
+                    //{
                         if (file.Length == 0)
                             throw new FileSizeException($"File {file.FileName} has no content.");
 
@@ -61,19 +61,21 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
                                 photo.PhotoData = fileBytes;
                                 photo.Description = "";
                                 photo.AddDate = DateTime.Now;
+                                if (command.AlbumId != Guid.Empty)
+                                    photo.AlbumId = command.AlbumId;
 
                                 photos.Add(photo);
                             }
                         }
-                    }
-                    catch (UnsupportedFileFormatException ex)
-                    {
-                        createPhotoResult.errors.Add(ex.Message);
-                    }
-                    catch (FileSizeException ex)
-                    {
-                        createPhotoResult.errors.Add(ex.Message);
-                    }
+                    //}
+                    //catch (UnsupportedFileFormatException ex)
+                    //{
+                    //    createPhotoResult.errors.Add(ex.Message);
+                    //}
+                    //catch (FileSizeException ex)
+                    //{
+                    //    createPhotoResult.errors.Add(ex.Message);
+                    //}
                 }
 
                 if (photos.Count > 0)
@@ -81,18 +83,14 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
                     _context.Photos.AddRange(photos);
                     await _context.SaveChangesAsync(cancellationToken);
 
-                    createPhotoResult.guids = photos.Select(p => p.Id).ToList();
+                    return photos.Select(p => p.Id).ToList();
                 }
 
-                return createPhotoResult;
+                return null;
             }
         }
 
 
     }
-    public class CreatePhotoResult
-    {
-        public List<String> errors { get; set; } = new List<string>();
-        public List<Guid> guids { get; set; } = new List<Guid>();
-    }
+
 }

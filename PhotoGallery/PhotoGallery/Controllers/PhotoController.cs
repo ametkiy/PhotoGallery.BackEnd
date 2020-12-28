@@ -1,10 +1,14 @@
-﻿using MediatR;
+﻿using LightQuery;
+using LightQuery.Client;
+using LightQuery.EntityFrameworkCore;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PhotoGalary.Features.PhotoFeatures.Commands;
 using PhotoGalary.Features.PhotoFeatures.Queries;
 using PhotoGallery;
 using PhotoGallery.Features.PhotoFeatures.Queries;
+using PhotoGallery.Model.DTO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,18 +30,29 @@ namespace PhotoGalary.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(new GetAllPhotosQuery ());
+            var result = await _mediator.Send(new GetAllPhotosQuery());
             return Ok(result);
         }
 
-        [HttpGet("{pageSize}/{page}")]
-        public async Task<IActionResult> GetPaginationPhotos(int pageSize=5,  int page=1 )
+        [AsyncLightQuery(forcePagination: true, defaultPageSize: 10)]
+        [ProducesResponseType(typeof(PaginationResult<PhotoDto>), 200)]
+        [HttpGet("GetPaginationPhotos")]
+        public async Task<IActionResult> GetPaginationPhotos()
         {
-            var result = await _mediator.Send(new GetPaginationPhotosQuery { Page = page, PageSize = pageSize });
+            var result = await _mediator.Send(new GetPaginationPhotosQuery { });
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [AsyncLightQuery(forcePagination: true, defaultPageSize: 10)]
+        [ProducesResponseType(typeof(PaginationResult<PhotoDto>), 200)]
+        [HttpGet("GetByAlbumId/{albumId}")]
+        public async Task<IActionResult> GetByAlbumId(string albumId = "00000000-0000-0000-0000-000000000000")
+        {
+            var result = await _mediator.Send(new GetPaginationPhotosInAlbumsQuery { AlbumId = Guid.Parse(albumId) });
+            return Ok(result);
+        }
+
+        [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _mediator.Send(new GetPhotoByIdQuery { Id = id });
@@ -45,11 +60,11 @@ namespace PhotoGalary.Controllers
         }
 
         [HttpPost, DisableRequestSizeLimit]
-        public async Task<IActionResult> Create([FromForm] IFormFileCollection Files)
+        public async Task<IActionResult> Create([FromForm] IFormFileCollection Files, [FromForm] Guid? AlbumId)
         {
             if (Files.Count > 0)
             {
-                var result = (await _mediator.Send(new CreatePhotoCommand { FormFiles = Files }));
+                var result = (await _mediator.Send(new CreatePhotoCommand { FormFiles = Files, AlbumId = AlbumId })); ;
 
                 return Ok(result);
             }

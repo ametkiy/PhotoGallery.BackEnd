@@ -25,14 +25,15 @@ namespace PhotoGalary.Features.AlbumFeatures.Queries
             public async Task<AlbumDto> Handle(GetAlbumByIdQuery query, CancellationToken cancellationToken)
             {
                 var album = await _context.Albums
-                    .Select(a => new AlbumDto {
+                    .Select(a => new AlbumDto
+                    {
                         Id = a.Id,
                         Title = a.Title,
-                        Description = a.Description
-                    })
-                    .FirstOrDefaultAsync(a => a.Id == query.Id);
+                        Description = a.Description,
+                    }).FirstOrDefaultAsync(a => a.Id == query.Id);
+                  
                 if (album == null) return null;
-                return album;
+                return null;
             }
         }
     }
