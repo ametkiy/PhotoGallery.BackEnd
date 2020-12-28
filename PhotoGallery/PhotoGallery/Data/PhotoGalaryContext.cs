@@ -26,6 +26,7 @@ namespace PhotoGalary.Data
                 .ToTable("Albums").HasKey(p => p.Id);
             modelBuilder.Entity<Album>()
                 .Property(p => p.Title).IsRequired().HasMaxLength(80);
+            
 
 
             modelBuilder.Entity<Photo>()
@@ -35,7 +36,8 @@ namespace PhotoGalary.Data
             modelBuilder.Entity<Photo>()
                 .HasOne<Album>(p => p.Album)
                 .WithMany(t => t.Photos)
-                .HasForeignKey(p => p.AlbumId);
+                .HasForeignKey(p => p.AlbumId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

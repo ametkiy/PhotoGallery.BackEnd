@@ -20,7 +20,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
             }
             public async Task<Guid> Handle(DeleteAlbumByIdCommand command, CancellationToken cancellationToken)
             {
-                var album = await _context.Albums.Where(a => a.Id == command.Id).FirstOrDefaultAsync();
+                var album = await _context.Albums.FirstOrDefaultAsync(a => a.Id == command.Id);
                 if (album == null) return default;
                 _context.Albums.Remove(album);
                 await _context.SaveChangesAsync(cancellationToken);

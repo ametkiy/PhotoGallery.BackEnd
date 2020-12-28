@@ -29,6 +29,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Queries
                         Title = a.Title,
                         Description = a.Description
                     })
+                    .OrderBy(p =>p.Title)
                     .ToListAsync();
                 return albumList.AsReadOnly();
             }
