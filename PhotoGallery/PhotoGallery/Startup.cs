@@ -11,6 +11,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PhotoGalary.Data;
+using PhotoGallery.Middleware;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,6 +57,10 @@ namespace PhotoGalary
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             }
 
             app.UseSwagger();

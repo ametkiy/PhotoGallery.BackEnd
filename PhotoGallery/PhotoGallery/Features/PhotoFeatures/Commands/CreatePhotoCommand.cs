@@ -42,7 +42,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
                         if (file.Length == 0)
                             throw new FileSizeException($"File {file.FileName} has no content.");
 
-                        if (file.Length > fileSizeLimit)
+                        if (fileSizeLimit > 0 && file.Length > fileSizeLimit)
                             throw new FileSizeException(file.FileName, file.Length, fileSizeLimit);
 
                         using (var ms = new MemoryStream())

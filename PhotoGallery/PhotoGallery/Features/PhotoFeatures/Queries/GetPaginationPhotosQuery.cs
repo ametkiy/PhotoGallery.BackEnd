@@ -26,7 +26,8 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
                     {
                         Id = p.Id,
                         FileName = p.FileName,
-                        AddDate = p.AddDate
+                        AddDate = p.AddDate,
+                        Description = p.Description
                     })
                     .OrderBy(p => p.AddDate);
 
