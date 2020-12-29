@@ -29,5 +29,5 @@ ipch/
 *.vssscc
 *.bak.*
 *.bak
-/PhotoGalary/.vs
+/PhotoGallery/.vs
 PhotoGallery/.vs/PhotoGallery/DesignTimeBuild/.dtbcache.v2
