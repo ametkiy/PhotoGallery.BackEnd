@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using PhotoGalary.Data;
+using PhotoGallery.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,11 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
             }
             public async Task<Guid> Handle(UpdateAlbumCommand command, CancellationToken cancellationToken)
             {
+                if (String.IsNullOrEmpty(command.Title) || String.IsNullOrWhiteSpace(command.Title))
+                {
+                    throw new FieldIsEmptyException("Album title must be completed");
+                }
+
                 var album = _context.Albums.FirstOrDefault(a => a.Id == command.Id);
 
                 if (album == null)

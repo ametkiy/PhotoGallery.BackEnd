@@ -37,45 +37,34 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
 
                 foreach (var file in command.FormFiles)
                 {
-                    //try
-                    //{
-                        if (file.Length == 0)
-                            throw new FileSizeException($"File {file.FileName} has no content.");
+                    if (file.Length == 0)
+                        throw new FileSizeException($"File {file.FileName} has no content.");
 
-                        if (fileSizeLimit > 0 && file.Length > fileSizeLimit)
-                            throw new FileSizeException(file.FileName, file.Length, fileSizeLimit);
+                    if (fileSizeLimit > 0 && file.Length > fileSizeLimit)
+                        throw new FileSizeException(file.FileName, file.Length, fileSizeLimit);
 
-                        using (var ms = new MemoryStream())
+                    using (var ms = new MemoryStream())
+                    {
+                        file.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+
+                        if (CheckMimeType.GetMimeType(fileBytes, file.FileName) == CheckMimeType.DefaultMimeTipe)
                         {
-                            file.CopyTo(ms);
-                            var fileBytes = ms.ToArray();
-
-                            if (CheckMimeType.GetMimeType(fileBytes, file.FileName) == CheckMimeType.DefaultMimeTipe)
-                            {
-                                throw new UnsupportedFileFormatException(file.FileName);
-                            }
-                            else
-                            {
-                                var photo = new Photo();
-                                photo.FileName = file.FileName;
-                                photo.PhotoData = fileBytes;
-                                photo.Description = "";
-                                photo.AddDate = DateTime.Now;
-                                if (command.AlbumId != Guid.Empty)
-                                    photo.AlbumId = command.AlbumId;
-
-                                photos.Add(photo);
-                            }
+                            throw new UnsupportedFileFormatException(file.FileName);
                         }
-                    //}
-                    //catch (UnsupportedFileFormatException ex)
-                    //{
-                    //    createPhotoResult.errors.Add(ex.Message);
-                    //}
-                    //catch (FileSizeException ex)
-                    //{
-                    //    createPhotoResult.errors.Add(ex.Message);
-                    //}
+                        else
+                        {
+                            var photo = new Photo();
+                            photo.FileName = file.FileName;
+                            photo.PhotoData = fileBytes;
+                            photo.Description = "";
+                            photo.AddDate = DateTime.Now;
+                            if (command.AlbumId != Guid.Empty)
+                                photo.AlbumId = command.AlbumId;
+
+                            photos.Add(photo);
+                        }
+                    }
                 }
 
                 if (photos.Count > 0)

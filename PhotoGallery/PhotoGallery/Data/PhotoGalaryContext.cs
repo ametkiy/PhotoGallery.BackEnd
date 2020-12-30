@@ -14,12 +14,6 @@ namespace PhotoGalary.Data
             : base(options)
         { }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //        optionsBuilder.UseSqlServer("Server=.\\SQLExpress; DataBase=PhotoGalary; trusted_connection=true;");
-        //}
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Album>()
