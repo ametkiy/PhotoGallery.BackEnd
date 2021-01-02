@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PhotoGallery.Exceptions;
 using System;
@@ -10,10 +11,12 @@ namespace PhotoGallery.Middleware
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
+        private readonly ILogger _logger;
 
-        public ErrorHandlingMiddleware(RequestDelegate next)
+        public ErrorHandlingMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
         {
             this.next = next;
+            _logger = loggerFactory.CreateLogger<ErrorHandlingMiddleware>();
         }
 
         public async Task Invoke(HttpContext context)
@@ -25,6 +28,8 @@ namespace PhotoGallery.Middleware
             catch (Exception ex)
             {
                 await HandleExceptionAsync(context, ex);
+                _logger.LogError(
+                   $"Request {context.Request?.Method} {context.Request?.Path.Value} => {context.Response?.StatusCode}, {Environment.NewLine} {ex.Message}");
             }
         }
 
@@ -37,7 +42,6 @@ namespace PhotoGallery.Middleware
             {
                 if (exception is UnsupportedFileFormatException) code = HttpStatusCode.UnsupportedMediaType;
             }
-
 
             var result = JsonConvert.SerializeObject(new { error = exception.Message });
             context.Response.ContentType = "application/json";
