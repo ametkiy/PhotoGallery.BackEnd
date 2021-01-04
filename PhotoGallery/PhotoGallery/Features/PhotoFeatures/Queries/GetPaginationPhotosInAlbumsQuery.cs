@@ -15,8 +15,8 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
         public Guid? AlbumId { get; set; }
         public class GetPaginationPhotosInAlbumsQueryHandler : IRequestHandler<GetPaginationPhotosInAlbumsQuery, IQueryable<PhotoDto>>
         {
-            private readonly IPhotoGalaryContext _context;
-            public GetPaginationPhotosInAlbumsQueryHandler(IPhotoGalaryContext context)
+            private readonly IPhotoGalleryContext _context;
+            public GetPaginationPhotosInAlbumsQueryHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }

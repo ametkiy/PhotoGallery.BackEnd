@@ -18,8 +18,8 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
 
         public class CreateAlbumComandHandler : IRequestHandler<CreateAlbumCommand, Guid>
         {
-            private readonly IPhotoGalaryContext _context;
-            public CreateAlbumComandHandler(IPhotoGalaryContext context)
+            private readonly IPhotoGalleryContext _context;
+            public CreateAlbumComandHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }

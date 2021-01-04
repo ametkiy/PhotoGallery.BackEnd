@@ -7,7 +7,7 @@ using PhotoGalary.Data;
 
 namespace PhotoGallery.Migrations
 {
-    [DbContext(typeof(PhotoGalaryContext))]
+    [DbContext(typeof(PhotoGalleryContext))]
     partial class PhotoGalaryContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

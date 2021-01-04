@@ -14,8 +14,8 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
 
         public class DeletePhotoByIdCommandHandler : IRequestHandler<DeletePhotoByIdCommand, Guid>
         {
-            private readonly IPhotoGalaryContext _context;
-            public DeletePhotoByIdCommandHandler(IPhotoGalaryContext context)
+            private readonly IPhotoGalleryContext _context;
+            public DeletePhotoByIdCommandHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }

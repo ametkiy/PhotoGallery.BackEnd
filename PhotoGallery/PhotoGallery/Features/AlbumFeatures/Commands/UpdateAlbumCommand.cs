@@ -18,8 +18,8 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
         public string Description { get; set; }
         public class UpdateAlbumCommandHandler : IRequestHandler<UpdateAlbumCommand, Guid>
         {
-            private readonly IPhotoGalaryContext _context;
-            public UpdateAlbumCommandHandler(IPhotoGalaryContext context)
+            private readonly IPhotoGalleryContext _context;
+            public UpdateAlbumCommandHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }

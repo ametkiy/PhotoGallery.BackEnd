@@ -8,7 +8,7 @@ using PhotoGalary.Data;
 
 namespace PhotoGallery.Migrations
 {
-    [DbContext(typeof(PhotoGalaryContext))]
+    [DbContext(typeof(PhotoGalleryContext))]
     [Migration("20201230145439_initial")]
     partial class initial
     {

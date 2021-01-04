@@ -13,8 +13,8 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
         public Guid Id { get; set; }
         public class DeleteAlbumByIdCommandHandler : IRequestHandler<DeleteAlbumByIdCommand, Guid>
         {
-            private readonly IPhotoGalaryContext _context;
-            public DeleteAlbumByIdCommandHandler(IPhotoGalaryContext context)
+            private readonly IPhotoGalleryContext _context;
+            public DeleteAlbumByIdCommandHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }

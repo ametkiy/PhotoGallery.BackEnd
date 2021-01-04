@@ -14,8 +14,8 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
     {
         public class GetAllPhotosQueryHandler : IRequestHandler<GetPaginationPhotosQuery, IQueryable<PhotoDto>>
         {
-            private readonly IPhotoGalaryContext _context;
-            public GetAllPhotosQueryHandler(IPhotoGalaryContext context)
+            private readonly IPhotoGalleryContext _context;
+            public GetAllPhotosQueryHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }

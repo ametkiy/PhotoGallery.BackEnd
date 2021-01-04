@@ -22,9 +22,9 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
 
         public class CreatePhotoCommandHandler : IRequestHandler<CreatePhotoCommand, IEnumerable<Guid>>
         {
-            private readonly IPhotoGalaryContext _context;
+            private readonly IPhotoGalleryContext _context;
             private readonly IConfiguration _config;
-            public CreatePhotoCommandHandler(IPhotoGalaryContext context, IConfiguration config)
+            public CreatePhotoCommandHandler(IPhotoGalleryContext context, IConfiguration config)
             {
                 _context = context;
                 _config = config;

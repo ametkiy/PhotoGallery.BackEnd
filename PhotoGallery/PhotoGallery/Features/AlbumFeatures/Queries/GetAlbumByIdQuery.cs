@@ -17,8 +17,8 @@ namespace PhotoGalary.Features.AlbumFeatures.Queries
 
         public class GetAlbumByIdQueryHandler : IRequestHandler<GetAlbumByIdQuery, AlbumDto>
         {
-            private readonly IPhotoGalaryContext _context;
-            public GetAlbumByIdQueryHandler(IPhotoGalaryContext context)
+            private readonly IPhotoGalleryContext _context;
+            public GetAlbumByIdQueryHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }

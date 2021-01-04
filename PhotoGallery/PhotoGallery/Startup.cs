@@ -34,11 +34,11 @@ namespace PhotoGalary
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<PhotoGalaryContext>(options =>
+            services.AddDbContext<PhotoGalleryContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<IPhotoGalaryContext>(provider => provider.GetService<PhotoGalaryContext>());
+            services.AddScoped<IPhotoGalleryContext>(provider => provider.GetService<PhotoGalleryContext>());
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddControllers();
@@ -66,7 +66,7 @@ namespace PhotoGalary
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PhotoGalary V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Photo Gallery V1");
             });
 
             app.UseHttpsRedirection();

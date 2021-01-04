@@ -15,8 +15,8 @@ namespace PhotoGalary.Features.PhotoFeatures.Queries
         public Guid Id { get; set; }
         public class GetPhotoByIdQueryHandler : IRequestHandler<GetPhotoByIdQuery, Photo>
         {
-            private readonly IPhotoGalaryContext _context;
-            public GetPhotoByIdQueryHandler(IPhotoGalaryContext context)
+            private readonly IPhotoGalleryContext _context;
+            public GetPhotoByIdQueryHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }

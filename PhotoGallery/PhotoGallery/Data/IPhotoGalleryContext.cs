@@ -1,0 +1,15 @@
+﻿using Microsoft.EntityFrameworkCore;
+using PhotoGalary.Model;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace PhotoGalary.Data
+{
+    public interface IPhotoGalleryContext
+    {
+        DbSet<Album> Albums { get; set; }
+        DbSet<Photo> Photos { get; set; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    }
+}

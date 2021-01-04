@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "PhotoGalary": {
+    "PhotoGallery": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
