@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PhotoGalary.Data;
 using PhotoGalary.Model;
+using PhotoGallery.Model.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,21 +11,38 @@ using System.Threading.Tasks;
 
 namespace PhotoGalary.Features.PhotoFeatures.Queries
 {
-    public class GetPhotoByIdQuery : IRequest<Photo>
+    public class GetPhotoByIdQuery : IRequest<PhotoDto>
     {
         public Guid Id { get; set; }
-        public class GetPhotoByIdQueryHandler : IRequestHandler<GetPhotoByIdQuery, Photo>
+        public class GetPhotoByIdQueryHandler : IRequestHandler<GetPhotoByIdQuery, PhotoDto>
         {
             private readonly IPhotoGalleryContext _context;
             public GetPhotoByIdQueryHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }
-            public async Task<Photo> Handle(GetPhotoByIdQuery query, CancellationToken cancellationToken)
+            public async Task<PhotoDto> Handle(GetPhotoByIdQuery query, CancellationToken cancellationToken)
             {
-                var photo =  await _context.Photos.FirstOrDefaultAsync(a => a.Id == query.Id);
-                if (photo == null) return null;
-                return photo;
+                var photoDto = await (from p in _context.Photos
+                where p.Id == query.Id
+                select new PhotoDto { 
+                    Id = p.Id,
+                    FileName = p.FileName,
+                    AlbumId = p.AlbumId,
+                    AddDate = p.AddDate,
+                    Description = p.Description,
+                    PhotoData = p.PhotoData
+                }).FirstOrDefaultAsync();
+                //var photoDto2 =  await _context.Photos.Select(p => new PhotoDto
+                //{
+                //    Id = p.Id,
+                //    FileName = p.FileName,
+                //    AlbumId = p.AlbumId,
+                //    AddDate = p.AddDate,
+                //    Description = p.Description,
+                //    PhotoData = p.PhotoData
+                //}).FirstOrDefaultAsync(a => a.Id == query.Id);
+                return photoDto;
             }
         }
     }
