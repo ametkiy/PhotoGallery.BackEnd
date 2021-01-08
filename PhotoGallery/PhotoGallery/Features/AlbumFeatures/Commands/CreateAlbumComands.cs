@@ -3,6 +3,7 @@ using MediatR;
 using PhotoGalary.Data;
 using PhotoGalary.Model;
 using PhotoGallery.Exceptions;
+using PhotoGallery.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
     {
         public string Title { get; set; }
         public string Description { get; set; }
+        public string[] Tags { get; set; }
 
         public class CreateAlbumComandHandler : IRequestHandler<CreateAlbumCommand, Guid>
         {
@@ -25,8 +27,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
             }
             public async Task<Guid> Handle(CreateAlbumCommand command, CancellationToken cancellationToken)
             {
-
-                var config = new MapperConfiguration(cfg => cfg.CreateMap<CreateAlbumCommand, Album>());
+                var config = new MapperConfiguration(cfg => cfg.CreateMap<CreateAlbumCommand, Album>().ForMember(c => c.Tags, act => act.Ignore()));
                 var mapper = new Mapper(config);
                 Album album = mapper.Map<CreateAlbumCommand, Album>(command);
 
@@ -34,6 +35,22 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
                 {
                     throw new FieldIsEmptyException("Album title must be completed");
                 }
+
+                foreach (var tag in command.Tags) {
+                    if (!String.IsNullOrWhiteSpace(tag))
+                    {
+                        var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
+                        if (tmp != null)
+                            album.Tags.Add(tmp);
+                        else
+                        {
+                            Tag tmpTag = new Tag { Name = tag };
+                            _context.Tags.Add(tmpTag);
+                            album.Tags.Add(tmpTag);
+                        }
+                    }
+                }
+
                 _context.Albums.Add(album);
                 await _context.SaveChangesAsync(cancellationToken);
                 return album.Id;

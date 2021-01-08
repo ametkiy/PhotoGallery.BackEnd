@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using PhotoGalary.Data;
 using PhotoGallery.Exceptions;
+using PhotoGallery.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string[] Tags { get; set; }
         public class UpdateAlbumCommandHandler : IRequestHandler<UpdateAlbumCommand, Guid>
         {
             private readonly IPhotoGalleryContext _context;
@@ -40,6 +42,23 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
                 {
                     album.Title = command.Title;
                     album.Description = command.Description;
+
+                    foreach (var tag in command.Tags)
+                    {
+                        if (!String.IsNullOrWhiteSpace(tag))
+                        {
+                            var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
+                            if (tmp != null)
+                                album.Tags.Add(tmp);
+                            else
+                            {
+                                Tag tmpTag = new Tag { Name = tag };
+                                _context.Tags.Add(tmpTag);
+                                album.Tags.Add(tmpTag);
+                            }
+                        }
+                    }
+
                     await _context.SaveChangesAsync(cancellationToken);
                     return album.Id;
                 }
