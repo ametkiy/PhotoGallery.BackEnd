@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PhotoGalary.Data;
 using PhotoGallery.Exceptions;
 using PhotoGallery.Model.Entities;
@@ -27,7 +28,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
             }
             public async Task<Guid> Handle(UpdatePhotoCommand command, CancellationToken cancellationToken)
             {
-                var photo = _context.Photos.FirstOrDefault(a => a.Id == command.Id);
+                var photo = _context.Photos.Include(t=>t.Tags).FirstOrDefault(a => a.Id == command.Id);
 
                 if (photo == null)
                 {
@@ -37,6 +38,8 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
                 {
                     photo.Description = command.Description;
                     photo.AlbumId = command.AlbumId;
+
+                    photo.Tags.Clear();
 
                     foreach (var tag in command.Tags)
                     {

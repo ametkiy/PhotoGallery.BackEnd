@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PhotoGalary.Data;
 using PhotoGallery.Exceptions;
 using PhotoGallery.Model.Entities;
@@ -32,16 +33,18 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
                     throw new FieldIsEmptyException("Album title must be completed");
                 }
 
-                var album = _context.Albums.FirstOrDefault(a => a.Id == command.Id);
+                var album = _context.Albums.Include(t => t.Tags).FirstOrDefault(a => a.Id == command.Id);
 
                 if (album == null)
                 {
-                    return default;
+                    throw new AlbumNotFoundException(command.Id);
                 }
                 else
                 {
                     album.Title = command.Title;
                     album.Description = command.Description;
+
+                    album.Tags.Clear();
 
                     foreach (var tag in command.Tags)
                     {

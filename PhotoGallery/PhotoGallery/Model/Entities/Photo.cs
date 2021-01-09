@@ -16,6 +16,6 @@ namespace PhotoGalary.Model
 
         public DateTime AddDate { get; set; }
 
-        public List<Tag> Tags { get; set; }
+        public List<Tag> Tags { get; set; } = new List<Tag>();
     }
 }

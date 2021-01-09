@@ -29,7 +29,7 @@ namespace PhotoGallery.Middleware
             {
                 await HandleExceptionAsync(context, ex);
                 _logger.LogError(
-                   $"Request {context.Request?.Method} {context.Request?.Path.Value} => {context.Response?.StatusCode}, {Environment.NewLine} {ex.Message}");
+                   $"Request {context.Request?.Method} {context.Request?.Path.Value} => {context.Response?.StatusCode}, {Environment.NewLine} {ex.InnerException}");
             }
         }
 
