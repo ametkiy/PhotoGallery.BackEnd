@@ -31,9 +31,8 @@ namespace PhotoGalary.Features.AlbumFeatures.Queries
                         Title = a.Title,
                         Description = a.Description,
                     }).FirstOrDefaultAsync(a => a.Id == query.Id);
-                  
-                if (album == null) return null;
-                return null;
+
+                return album;
             }
         }
     }

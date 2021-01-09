@@ -52,7 +52,9 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
                         {
                             var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
                             if (tmp != null)
-                                album.Tags.Add(tmp);
+                            {   if (!album.Tags.Contains(tmp))
+                                    album.Tags.Add(tmp);
+                            }
                             else
                             {
                                 Tag tmpTag = new Tag { Name = tag };

@@ -47,7 +47,10 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
                         {
                             var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
                             if (tmp != null)
-                                photo.Tags.Add(tmp);
+                            {
+                                if (!photo.Tags.Contains(tmp))
+                                    photo.Tags.Add(tmp);
+                            }
                             else
                             {
                                 Tag tmpTag = new Tag { Name = tag };
