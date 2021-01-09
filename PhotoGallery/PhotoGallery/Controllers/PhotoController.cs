@@ -10,8 +10,7 @@ using PhotoGallery;
 using PhotoGallery.Features.PhotoFeatures.Queries;
 using PhotoGallery.Model.DTO;
 using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PhotoGalary.Controllers
@@ -49,6 +48,19 @@ namespace PhotoGalary.Controllers
         public async Task<IActionResult> GetByAlbumId(string albumId = "00000000-0000-0000-0000-000000000000")
         {
             var result = await _mediator.Send(new GetPaginationPhotosInAlbumsQuery { AlbumId = Guid.Parse(albumId) });
+            return Ok(result);
+        }
+
+        [AsyncLightQuery(forcePagination: true, defaultPageSize: 10)]
+        [ProducesResponseType(typeof(PaginationResult<PhotoDto>), 200)]
+        [HttpGet("GetPhotosByTag/{tag}")]
+        public async Task<IActionResult> GetPhotosByTag(string tag = "")
+        {
+            IQueryable<PhotoDto> result;
+            if (String.IsNullOrWhiteSpace(tag))
+                result = await _mediator.Send(new GetPaginationPhotosQuery { });
+            else
+                result = await _mediator.Send(new GetPaginationPhotosByTagQuery { Tag = tag });
             return Ok(result);
         }
 

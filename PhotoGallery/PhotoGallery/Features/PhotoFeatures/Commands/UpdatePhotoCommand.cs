@@ -18,7 +18,7 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
         public Guid Id { get; set; }
         public string Description { get; set; }
         public Guid? AlbumId { get; set; }
-        public string[] Tags { get; set; }
+        public string Tags { get; set; }
         public class UpdatePhotoCommandHandler : IRequestHandler<UpdatePhotoCommand, Guid>
         {
             private readonly IPhotoGalleryContext _context;
@@ -41,21 +41,25 @@ namespace PhotoGalary.Features.PhotoFeatures.Commands
 
                     photo.Tags.Clear();
 
-                    foreach (var tag in command.Tags)
+                    if (!String.IsNullOrWhiteSpace(command.Tags))
                     {
-                        if (!String.IsNullOrWhiteSpace(tag))
+                        var tagsArray = command.Tags.Split(";");
+                        foreach (var tag in tagsArray)
                         {
-                            var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
-                            if (tmp != null)
+                            if (!String.IsNullOrWhiteSpace(tag))
                             {
-                                if (!photo.Tags.Contains(tmp))
-                                    photo.Tags.Add(tmp);
-                            }
-                            else
-                            {
-                                Tag tmpTag = new Tag { Name = tag };
-                                _context.Tags.Add(tmpTag);
-                                photo.Tags.Add(tmpTag);
+                                var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
+                                if (tmp != null)
+                                {
+                                    if (!photo.Tags.Contains(tmp))
+                                        photo.Tags.Add(tmp);
+                                }
+                                else
+                                {
+                                    Tag tmpTag = new Tag { Name = tag };
+                                    _context.Tags.Add(tmpTag);
+                                    photo.Tags.Add(tmpTag);
+                                }
                             }
                         }
                     }

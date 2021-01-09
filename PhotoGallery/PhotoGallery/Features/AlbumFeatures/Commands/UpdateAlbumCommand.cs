@@ -46,23 +46,24 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
 
                     album.Tags.Clear();
 
-                    foreach (var tag in command.Tags)
-                    {
-                        if (!String.IsNullOrWhiteSpace(tag))
+                    if(command.Tags!=null)
+                        foreach (var tag in command.Tags)
                         {
-                            var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
-                            if (tmp != null)
-                            {   if (!album.Tags.Contains(tmp))
-                                    album.Tags.Add(tmp);
-                            }
-                            else
+                            if (!String.IsNullOrWhiteSpace(tag))
                             {
-                                Tag tmpTag = new Tag { Name = tag };
-                                _context.Tags.Add(tmpTag);
-                                album.Tags.Add(tmpTag);
+                                var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
+                                if (tmp != null)
+                                {   if (!album.Tags.Contains(tmp))
+                                        album.Tags.Add(tmp);
+                                }
+                                else
+                                {
+                                    Tag tmpTag = new Tag { Name = tag };
+                                    _context.Tags.Add(tmpTag);
+                                    album.Tags.Add(tmpTag);
+                                }
                             }
                         }
-                    }
 
                     await _context.SaveChangesAsync(cancellationToken);
                     return album.Id;
