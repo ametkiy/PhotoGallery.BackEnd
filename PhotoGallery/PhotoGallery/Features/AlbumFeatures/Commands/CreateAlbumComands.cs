@@ -16,7 +16,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public string[] Tags { get; set; }
+        public string Tags { get; set; }
 
         public class CreateAlbumComandHandler : IRequestHandler<CreateAlbumCommand, Guid>
         {
@@ -36,17 +36,25 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
                     throw new FieldIsEmptyException("Album title must be completed");
                 }
 
-                foreach (var tag in command.Tags) {
-                    if (!String.IsNullOrWhiteSpace(tag))
+                if (!String.IsNullOrWhiteSpace(command.Tags))
+                {
+                    var tagsArray = command.Tags.Split(";");
+                    foreach (var tag in tagsArray)
                     {
-                        var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
-                        if (tmp != null)
-                            album.Tags.Add(tmp);
-                        else
+                        if (!String.IsNullOrWhiteSpace(tag))
                         {
-                            Tag tmpTag = new Tag { Name = tag };
-                            _context.Tags.Add(tmpTag);
-                            album.Tags.Add(tmpTag);
+                            var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
+                            if (tmp != null)
+                            {
+                                if (!album.Tags.Contains(tmp))
+                                    album.Tags.Add(tmp);
+                            }
+                            else
+                            {
+                                Tag tmpTag = new Tag { Name = tag };
+                                _context.Tags.Add(tmpTag);
+                                album.Tags.Add(tmpTag);
+                            }
                         }
                     }
                 }

@@ -30,6 +30,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Queries
                         Id = a.Id,
                         Title = a.Title,
                         Description = a.Description,
+                        Tags = String.Join(";", a.Tags.Select(t => t.Name).ToArray())
                     }).FirstOrDefaultAsync(a => a.Id == query.Id);
 
                 return album;

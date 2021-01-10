@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PhotoGalary.Data;
 
 using PhotoGallery.Model.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -27,7 +28,8 @@ namespace PhotoGalary.Features.PhotoFeatures.Queries
                         Id = p.Id,
                         FileName = p.FileName,
                         AlbumId = p.AlbumId,
-                        AddDate = p.AddDate
+                        AddDate = p.AddDate,
+                        Tags = String.Join(";", p.Tags.Select(t => t.Name).ToArray())
                     })
                     .OrderBy(p => p.AddDate)
                     .ToListAsync();

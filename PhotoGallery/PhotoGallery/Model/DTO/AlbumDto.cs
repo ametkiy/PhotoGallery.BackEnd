@@ -11,5 +11,6 @@ namespace PhotoGallery.Model.DTO
         public string Description { get; set; }
 
         public List<Photo> Photos { get; set; } = new List<Photo>();
+        public string Tags { get; set; }
     }
 }

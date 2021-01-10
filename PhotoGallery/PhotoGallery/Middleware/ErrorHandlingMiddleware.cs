@@ -27,9 +27,11 @@ namespace PhotoGallery.Middleware
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                 await HandleExceptionAsync(context, ex);
                 _logger.LogError(
-                   $"Request {context.Request?.Method} {context.Request?.Path.Value} => {context.Response?.StatusCode}, {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                   $"Request {context.Request?.Method} {context.Request?.Path.Value} => {context.Response?.StatusCode}," +
+                   $" {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"
+                   );
             }
         }
 
@@ -37,7 +39,8 @@ namespace PhotoGallery.Middleware
         {
             HttpStatusCode code = HttpStatusCode.InternalServerError; 
 
-            if (exception is FieldIsEmptyException || exception is FileSizeException) code = HttpStatusCode.BadRequest;
+            if (exception is FieldIsEmptyException || exception is FileSizeException || 
+                exception is AlbumNotFoundException || exception is PhotoNotFoundException) code = HttpStatusCode.BadRequest;
             else
             {
                 if (exception is UnsupportedFileFormatException) code = HttpStatusCode.UnsupportedMediaType;

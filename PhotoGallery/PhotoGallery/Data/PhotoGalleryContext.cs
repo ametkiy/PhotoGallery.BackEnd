@@ -21,7 +21,7 @@ namespace PhotoGalary.Data
             modelBuilder.Entity<Album>()
                 .Property(p => p.Title).IsRequired().HasMaxLength(80);
             modelBuilder.Entity<Album>()
-                .HasMany(t => t.Tags)
+                .HasMany<Tag>(t => t.Tags)
                 .WithMany(a => a.Albums)
                 .UsingEntity(u => u.ToTable("AlbumsTags"));
 
@@ -36,13 +36,15 @@ namespace PhotoGalary.Data
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Photo>()
-                .HasMany(t => t.Tags)
+                .HasMany<Tag>(t => t.Tags)
                 .WithMany(a => a.Photos)
                 .UsingEntity(u => u.ToTable("PhotosTags"));
 
             modelBuilder.Entity<Tag>()
                 .ToTable("Tags").HasKey(p => p.Id);
             modelBuilder.Entity<Tag>().Property(t => t.Name).IsRequired().HasMaxLength(100);
+
+
         }
     }
 }

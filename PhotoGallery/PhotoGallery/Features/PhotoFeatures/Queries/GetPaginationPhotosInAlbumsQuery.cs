@@ -42,7 +42,8 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
                         FileName = p.FileName,
                         AddDate = p.AddDate,
                         Description = p.Description,
-                        AlbumId = p.AlbumId
+                        AlbumId = p.AlbumId,
+                        Tags = String.Join(";", p.Tags.Select(t => t.Name).ToArray())
                     })
                     .OrderBy(p => p.AddDate).Where(p => p.AlbumId == request.AlbumId);
                 return Task.FromResult(photoListQuery);
