@@ -27,29 +27,29 @@ namespace PhotoGallery.Middleware
             }
             catch (Exception ex)
             {
-                 await HandleExceptionAsync(context, ex);
-                _logger.LogError(
-                   $"Request {context.Request?.Method} {context.Request?.Path.Value} => {context.Response?.StatusCode}," +
-                   $" {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"
-                   );
+                await HandleExceptionAsync(context, ex);
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(
+                       $"Request {context.Request?.Method} {context.Request?.Path.Value} => {context.Response?.StatusCode}," +
+                       $" {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"
+                       );
+                }
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static async Task<HttpContext> HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            HttpStatusCode code = HttpStatusCode.InternalServerError; 
+            HttpStatusCode code = HttpStatusCode.InternalServerError;
 
-            if (exception is FieldIsEmptyException || exception is FileSizeException || 
-                exception is AlbumNotFoundException || exception is PhotoNotFoundException) code = HttpStatusCode.BadRequest;
-            else
-            {
-                if (exception is UnsupportedFileFormatException) code = HttpStatusCode.UnsupportedMediaType;
-            }
+            if (exception is BaseException)
+                 code = (exception as BaseException).ErrorCode;
 
             var result = JsonConvert.SerializeObject(new { error = exception.Message });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
-            return context.Response.WriteAsync(result);
+            await context.Response.WriteAsync(result);
+            return context;
         }
     }
 }

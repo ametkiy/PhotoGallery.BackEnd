@@ -45,9 +45,9 @@ namespace PhotoGalary.Controllers
         [AsyncLightQuery(forcePagination: true, defaultPageSize: 10)]
         [ProducesResponseType(typeof(PaginationResult<PhotoDto>), 200)]
         [HttpGet("GetByAlbumId/{albumId}")]
-        public async Task<IActionResult> GetByAlbumId(string albumId = "00000000-0000-0000-0000-000000000000")
+        public async Task<IActionResult> GetByAlbumId(Guid albumId)
         {
-            var result = await _mediator.Send(new GetPaginationPhotosInAlbumsQuery { AlbumId = Guid.Parse(albumId) });
+            var result = await _mediator.Send(new GetPaginationPhotosInAlbumsQuery { AlbumId = albumId });
             return Ok(result);
         }
 

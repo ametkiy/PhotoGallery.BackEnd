@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace PhotoGallery.Exceptions
 {
-    public class PhotoNotFoundException : Exception
+    public class PhotoNotFoundException : BaseException
     {
+        public override HttpStatusCode ErrorCode { get; } = HttpStatusCode.NotFound;
         public PhotoNotFoundException()
         {
         }
