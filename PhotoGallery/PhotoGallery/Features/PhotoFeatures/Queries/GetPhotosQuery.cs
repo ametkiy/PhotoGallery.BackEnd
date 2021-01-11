@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using PhotoGalary.Data;
-
+using PhotoGallery.Data;
 using PhotoGallery.Model.DTO;
 using System;
 using System.Collections.Generic;
@@ -9,33 +8,32 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhotoGalary.Features.PhotoFeatures.Queries
+namespace PhotoGallery.Features.PhotoFeatures.Queries
 {
-    public class GetAllPhotosQuery : IRequest<IEnumerable<PhotoDto>>
+    public class GetPhotosQuery : IRequest<IQueryable<PhotoDto>>
     {
-        public class GetAllPhotosQueryHandler : IRequestHandler<GetAllPhotosQuery, IEnumerable<PhotoDto>>
+        public class GetAllPhotosQueryHandler : IRequestHandler<GetPhotosQuery, IQueryable<PhotoDto>>
         {
             private readonly IPhotoGalleryContext _context;
             public GetAllPhotosQueryHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }
-            public async Task<IEnumerable<PhotoDto>> Handle(GetAllPhotosQuery request, CancellationToken cancellationToken)
+            public Task<IQueryable<PhotoDto>> Handle(GetPhotosQuery request, CancellationToken cancellationToken)
             {
-                var photoList = await _context.Photos
+                IQueryable<PhotoDto> photoListQuery = _context.Photos
                     .Select(p => new PhotoDto
                     {
                         Id = p.Id,
                         FileName = p.FileName,
-                        AlbumId = p.AlbumId,
                         AddDate = p.AddDate,
+                        Description = p.Description,
+                        AlbumId = p.AlbumId,
                         Tags = String.Join(";", p.Tags.Select(t => t.Name).ToArray())
                     })
-                    .OrderBy(p => p.AddDate)
-                    .ToListAsync();
+                    .OrderBy(p => p.AddDate);
 
-                return photoList;
-                
+                return Task.FromResult(photoListQuery);
             }
         }
     }

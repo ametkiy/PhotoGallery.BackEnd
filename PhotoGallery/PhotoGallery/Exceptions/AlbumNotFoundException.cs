@@ -20,7 +20,7 @@ namespace PhotoGallery.Exceptions
         }
 
         public AlbumNotFoundException(Guid id)
-            : base($"Album with id {id} not found.")
+            : base($"Album with id '{id}' not found.")
         {
         }
     }

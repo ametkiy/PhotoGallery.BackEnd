@@ -1,7 +1,7 @@
 ﻿using PhotoGallery.Model.Entities;
 using System.Collections.Generic;
 
-namespace PhotoGalary.Model
+namespace PhotoGallery.Model
 {
     public class Album : BaseModel
     {

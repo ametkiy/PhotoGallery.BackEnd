@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using PhotoGalary.Data;
+using PhotoGallery.Data;
 using PhotoGallery.Model.DTO;
 using System;
 using System.Collections.Generic;

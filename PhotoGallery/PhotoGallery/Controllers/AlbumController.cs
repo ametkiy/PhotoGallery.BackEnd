@@ -1,11 +1,15 @@
-﻿using MediatR;
+﻿using LightQuery.Client;
+using LightQuery.EntityFrameworkCore;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PhotoGalary.Features.AlbumFeatures.Commands;
-using PhotoGalary.Features.AlbumFeatures.Queries;
+using PhotoGallery.Features.AlbumFeatures.Commands;
+using PhotoGallery.Features.AlbumFeatures.Queries;
+using PhotoGallery.Features.PhotoFeatures.Queries;
+using PhotoGallery.Model.DTO;
 using System;
 using System.Threading.Tasks;
 
-namespace PhotoGalary.Controllers
+namespace PhotoGallery.Controllers
 {
     [ApiController]
     [Route("/api/album")]
@@ -18,14 +22,7 @@ namespace PhotoGalary.Controllers
             this._mediator = mediator;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateAlbumCommand command)
-        {
-            var result = await _mediator.Send(command);
-            return Ok(result);
-        }
-
-        [HttpGet]
+        [HttpGet("/api/albums")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetAllAlbumsQuery());
@@ -33,16 +30,25 @@ namespace PhotoGalary.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid Id)
         {
-            var result = await _mediator.Send(new GetAlbumByIdQuery { Id = id });
+            var result = await _mediator.Send(new GetAlbumByIdQuery { Id = Id });
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [AsyncLightQuery(forcePagination: false, defaultPageSize: 10)]
+        [ProducesResponseType(typeof(PaginationResult<PhotoDto>), 200)]
+        [HttpGet("{id}/photos")]
+        public async Task<IActionResult> GetByAlbumId(Guid id)
         {
-            var result = await _mediator.Send(new DeleteAlbumByIdCommand { Id = id });
+            var result = await _mediator.Send(new GetPaginationPhotosInAlbumsQuery { AlbumId = id });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateAlbumCommand command)
+        {
+            var result = await _mediator.Send(command);
             return Ok(result);
         }
 
@@ -51,6 +57,13 @@ namespace PhotoGalary.Controllers
         {
             command.Id = id;
             var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await _mediator.Send(new DeleteAlbumByIdCommand { Id = id });
             return Ok(result);
         }
     }

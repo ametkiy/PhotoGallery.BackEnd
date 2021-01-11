@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using PhotoGalary.Data;
+using PhotoGallery.Data;
 using PhotoGallery.Exceptions;
 using PhotoGallery.Model.Entities;
 using System;
@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhotoGalary.Features.PhotoFeatures.Commands
+namespace PhotoGallery.Features.PhotoFeatures.Commands
 {
     public class UpdatePhotoCommand : IRequest<Guid>
     {

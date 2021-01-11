@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PhotoGalary.Model;
+using PhotoGallery.Model;
 using PhotoGallery.Model.Entities;
 
-namespace PhotoGalary.Data
+namespace PhotoGallery.Data
 {
     public class PhotoGalleryContext : DbContext, IPhotoGalleryContext
     {

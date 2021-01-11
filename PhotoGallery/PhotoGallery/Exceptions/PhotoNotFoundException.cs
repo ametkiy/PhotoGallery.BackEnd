@@ -19,7 +19,7 @@ namespace PhotoGallery.Exceptions
         }
 
         public PhotoNotFoundException(Guid id)
-            : base($"Photo with id {id} not found.")
+            : base($"Photo with id '{id}' not found.")
         {
         }
     }

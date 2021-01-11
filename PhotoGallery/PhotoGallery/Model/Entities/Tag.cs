@@ -1,4 +1,4 @@
-﻿using PhotoGalary.Model;
+﻿using PhotoGallery.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

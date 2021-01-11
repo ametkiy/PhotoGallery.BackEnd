@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PhotoGalary.Model;
+using PhotoGallery.Model;
 using PhotoGallery.Model.Entities;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhotoGalary.Data
+namespace PhotoGallery.Data
 {
     public interface IPhotoGalleryContext
     {

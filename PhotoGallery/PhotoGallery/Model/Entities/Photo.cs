@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PhotoGalary.Model
+namespace PhotoGallery.Model
 {
     public class Photo : BaseModel
     {

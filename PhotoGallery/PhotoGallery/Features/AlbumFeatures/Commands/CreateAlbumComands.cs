@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using PhotoGalary.Data;
-using PhotoGalary.Model;
+using PhotoGallery.Data;
+using PhotoGallery.Model;
 using PhotoGallery.Exceptions;
 using PhotoGallery.Model.Entities;
 using System;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhotoGalary.Features.AlbumFeatures.Commands
+namespace PhotoGallery.Features.AlbumFeatures.Commands
 {
     public class CreateAlbumCommand : IRequest<Guid>
     {
