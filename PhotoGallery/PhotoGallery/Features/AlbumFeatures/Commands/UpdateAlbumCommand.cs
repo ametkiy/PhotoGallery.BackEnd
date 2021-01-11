@@ -18,7 +18,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string[] Tags { get; set; }
+        public string Tags { get; set; }
         public class UpdateAlbumCommandHandler : IRequestHandler<UpdateAlbumCommand, Guid>
         {
             private readonly IPhotoGalleryContext _context;
@@ -46,14 +46,17 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
 
                     album.Tags.Clear();
 
-                    if(command.Tags!=null)
-                        foreach (var tag in command.Tags)
+                    if (!String.IsNullOrWhiteSpace(command.Tags))
+                    {
+                        var tagsArray = command.Tags.Split(";");
+                        foreach (var tag in tagsArray)
                         {
                             if (!String.IsNullOrWhiteSpace(tag))
                             {
                                 var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
                                 if (tmp != null)
-                                {   if (!album.Tags.Contains(tmp))
+                                {
+                                    if (!album.Tags.Contains(tmp))
                                         album.Tags.Add(tmp);
                                 }
                                 else
@@ -64,6 +67,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
                                 }
                             }
                         }
+                    }
 
                     await _context.SaveChangesAsync(cancellationToken);
                     return album.Id;
