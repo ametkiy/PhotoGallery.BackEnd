@@ -10,17 +10,17 @@ using System.Threading.Tasks;
 
 namespace PhotoGallery.Features.PhotoFeatures.Queries
 {
-    public class GetPaginationPhotosInAlbumsQuery : IRequest<IQueryable<PhotoDto>>
+    public class GetPhotosInAlbumsQuery : IRequest<IQueryable<PhotoDto>>
     {
         public Guid? AlbumId { get; set; }
-        public class GetPaginationPhotosInAlbumsQueryHandler : IRequestHandler<GetPaginationPhotosInAlbumsQuery, IQueryable<PhotoDto>>
+        public class GetPaginationPhotosInAlbumsQueryHandler : IRequestHandler<GetPhotosInAlbumsQuery, IQueryable<PhotoDto>>
         {
             private readonly IPhotoGalleryContext _context;
             public GetPaginationPhotosInAlbumsQueryHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }
-            public Task<IQueryable<PhotoDto>> Handle(GetPaginationPhotosInAlbumsQuery request, CancellationToken cancellationToken)
+            public Task<IQueryable<PhotoDto>> Handle(GetPhotosInAlbumsQuery request, CancellationToken cancellationToken)
             {
                 IQueryable<PhotoDto> photoListQuery;
                 if (request.AlbumId == Guid.Empty)

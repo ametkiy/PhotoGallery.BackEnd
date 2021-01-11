@@ -41,7 +41,7 @@ namespace PhotoGallery.Controllers
         [HttpGet("{id}/photos")]
         public async Task<IActionResult> GetByAlbumId(Guid id)
         {
-            var result = await _mediator.Send(new GetPaginationPhotosInAlbumsQuery { AlbumId = id });
+            var result = await _mediator.Send(new GetPhotosInAlbumsQuery { AlbumId = id });
             return Ok(result);
         }
 

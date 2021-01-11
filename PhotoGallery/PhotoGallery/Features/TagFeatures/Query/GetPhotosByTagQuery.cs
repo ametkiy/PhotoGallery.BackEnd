@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace PhotoGallery.Features.PhotoFeatures.Queries
 {
-    public class GetPaginationPhotosByTagQuery : IRequest<IQueryable<PhotoDto>>
+    public class GetPhotosByTagQuery : IRequest<IQueryable<PhotoDto>>
     {
         public string Tag { get; set; }
 
-        public class GetPhotoByTagQueryHandler : IRequestHandler<GetPaginationPhotosByTagQuery, IQueryable<PhotoDto>>
+        public class GetPhotoByTagQueryHandler : IRequestHandler<GetPhotosByTagQuery, IQueryable<PhotoDto>>
         {
             private readonly IPhotoGalleryContext _context;
             public GetPhotoByTagQueryHandler(IPhotoGalleryContext context)
@@ -23,7 +23,7 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
                 _context = context;
             }
 
-            public async Task<IQueryable<PhotoDto>> Handle(GetPaginationPhotosByTagQuery request, CancellationToken cancellationToken)
+            public async Task<IQueryable<PhotoDto>> Handle(GetPhotosByTagQuery request, CancellationToken cancellationToken)
             {
                 IQueryable<PhotoDto> resultQuery;
 

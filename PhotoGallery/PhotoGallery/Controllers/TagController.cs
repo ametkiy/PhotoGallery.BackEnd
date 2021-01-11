@@ -30,7 +30,7 @@ namespace PhotoGallery.Controllers
             if (String.IsNullOrWhiteSpace(tag))
                 result = await _mediator.Send(new GetPhotosQuery { });
             else
-                result = await _mediator.Send(new GetPaginationPhotosByTagQuery { Tag = tag });
+                result = await _mediator.Send(new GetPhotosByTagQuery { Tag = tag });
             return Ok(result);
         }
     }
