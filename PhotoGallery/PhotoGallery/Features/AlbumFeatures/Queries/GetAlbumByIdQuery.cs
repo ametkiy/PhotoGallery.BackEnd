@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using PhotoGalary.Data;
-using PhotoGalary.Model;
+using PhotoGallery.Data;
+using PhotoGallery.Model;
+using PhotoGallery.Exceptions;
 using PhotoGallery.Model.DTO;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhotoGalary.Features.AlbumFeatures.Queries
+namespace PhotoGallery.Features.AlbumFeatures.Queries
 {
     public class GetAlbumByIdQuery : IRequest<AlbumDto>
     {
@@ -24,16 +25,19 @@ namespace PhotoGalary.Features.AlbumFeatures.Queries
             }
             public async Task<AlbumDto> Handle(GetAlbumByIdQuery query, CancellationToken cancellationToken)
             {
-                var album = await _context.Albums
+                var albumDto = await _context.Albums
                     .Select(a => new AlbumDto
                     {
                         Id = a.Id,
                         Title = a.Title,
                         Description = a.Description,
+                        Tags = String.Join(";", a.Tags.Select(t => t.Name).ToArray())
                     }).FirstOrDefaultAsync(a => a.Id == query.Id);
-                  
-                if (album == null) return null;
-                return null;
+
+                if (albumDto == null)
+                    throw new AlbumNotFoundException(query.Id);
+
+                return albumDto;
             }
         }
     }

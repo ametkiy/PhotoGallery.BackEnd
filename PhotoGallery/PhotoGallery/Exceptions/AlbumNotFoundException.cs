@@ -6,20 +6,21 @@ using System.Threading.Tasks;
 
 namespace PhotoGallery.Exceptions
 {
-    public class PhotoNotFoundException : BaseException
+    public class AlbumNotFoundException : BaseException
     {
         public override HttpStatusCode ErrorCode { get; } = HttpStatusCode.NotFound;
-        public PhotoNotFoundException()
+
+        public AlbumNotFoundException()
         {
         }
 
-        public PhotoNotFoundException(string message)
+        public AlbumNotFoundException(string message)
             : base(message)
         {
         }
 
-        public PhotoNotFoundException(Guid id)
-            : base($"Photo with id '{id}' not found.")
+        public AlbumNotFoundException(Guid id)
+            : base($"Album with id '{id}' not found.")
         {
         }
     }

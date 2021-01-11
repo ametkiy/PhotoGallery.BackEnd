@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using PhotoGalary.Data;
-using PhotoGalary.Model;
+using PhotoGallery.Data;
+using PhotoGallery.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using PhotoGallery.Exceptions;
 
-namespace PhotoGalary.Features.PhotoFeatures.Commands
+namespace PhotoGallery.Features.PhotoFeatures.Commands
 {
     public class CreatePhotoCommand : IRequest<IEnumerable<Guid>>
     {

@@ -1,6 +1,8 @@
 ﻿using MediatR;
-using PhotoGalary.Data;
+using Microsoft.EntityFrameworkCore;
+using PhotoGallery.Data;
 using PhotoGallery.Exceptions;
+using PhotoGallery.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +10,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhotoGalary.Features.AlbumFeatures.Commands
+namespace PhotoGallery.Features.AlbumFeatures.Commands
 {
     public class UpdateAlbumCommand : IRequest<Guid>
     {
@@ -16,6 +18,7 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Tags { get; set; }
         public class UpdateAlbumCommandHandler : IRequestHandler<UpdateAlbumCommand, Guid>
         {
             private readonly IPhotoGalleryContext _context;
@@ -30,16 +33,42 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
                     throw new FieldIsEmptyException("Album title must be completed");
                 }
 
-                var album = _context.Albums.FirstOrDefault(a => a.Id == command.Id);
+                var album = _context.Albums.Include(t => t.Tags).FirstOrDefault(a => a.Id == command.Id);
 
                 if (album == null)
                 {
-                    return default;
+                    throw new AlbumNotFoundException(command.Id);
                 }
                 else
                 {
                     album.Title = command.Title;
                     album.Description = command.Description;
+
+                    album.Tags.Clear();
+
+                    if (!String.IsNullOrWhiteSpace(command.Tags))
+                    {
+                        var tagsArray = command.Tags.Split(";");
+                        foreach (var tag in tagsArray)
+                        {
+                            if (!String.IsNullOrWhiteSpace(tag))
+                            {
+                                var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
+                                if (tmp != null)
+                                {
+                                    if (!album.Tags.Contains(tmp))
+                                        album.Tags.Add(tmp);
+                                }
+                                else
+                                {
+                                    Tag tmpTag = new Tag { Name = tag };
+                                    _context.Tags.Add(tmpTag);
+                                    album.Tags.Add(tmpTag);
+                                }
+                            }
+                        }
+                    }
+
                     await _context.SaveChangesAsync(cancellationToken);
                     return album.Id;
                 }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace PhotoGallery.Exceptions
 {
-    public class UnsupportedFileFormatException : Exception
+    public class UnsupportedFileFormatException : BaseException
     {
+        public override HttpStatusCode ErrorCode { get; } = HttpStatusCode.UnsupportedMediaType;
         public UnsupportedFileFormatException()
         {
         }

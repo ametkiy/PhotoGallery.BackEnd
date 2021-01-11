@@ -1,20 +1,15 @@
-﻿using LightQuery;
-using LightQuery.Client;
+﻿using LightQuery.Client;
 using LightQuery.EntityFrameworkCore;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PhotoGalary.Features.PhotoFeatures.Commands;
-using PhotoGalary.Features.PhotoFeatures.Queries;
-using PhotoGallery;
+using PhotoGallery.Features.PhotoFeatures.Commands;
 using PhotoGallery.Features.PhotoFeatures.Queries;
 using PhotoGallery.Model.DTO;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
-namespace PhotoGalary.Controllers
+namespace PhotoGallery.Controllers
 {
     [ApiController]
     [Route("/api/photo")]
@@ -27,32 +22,17 @@ namespace PhotoGalary.Controllers
             this._mediator = mediator;
         }
 
-        [HttpGet]
+        [AsyncLightQuery(forcePagination: false, defaultPageSize: 10)]
+        [ProducesResponseType(typeof(PaginationResult<PhotoDto>), 200)]
+        [HttpGet("/api/photos")]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(new GetAllPhotosQuery());
+            var result = await _mediator.Send(new GetPhotosQuery { });
             return Ok(result);
         }
 
-        [AsyncLightQuery(forcePagination: true, defaultPageSize: 10)]
-        [ProducesResponseType(typeof(PaginationResult<PhotoDto>), 200)]
-        [HttpGet("GetPaginationPhotos")]
-        public async Task<IActionResult> GetPaginationPhotos()
-        {
-            var result = await _mediator.Send(new GetPaginationPhotosQuery { });
-            return Ok(result);
-        }
 
-        [AsyncLightQuery(forcePagination: true, defaultPageSize: 10)]
-        [ProducesResponseType(typeof(PaginationResult<PhotoDto>), 200)]
-        [HttpGet("GetByAlbumId/{albumId}")]
-        public async Task<IActionResult> GetByAlbumId(string albumId = "00000000-0000-0000-0000-000000000000")
-        {
-            var result = await _mediator.Send(new GetPaginationPhotosInAlbumsQuery { AlbumId = Guid.Parse(albumId) });
-            return Ok(result);
-        }
-
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _mediator.Send(new GetPhotoByIdQuery { Id = id });
@@ -72,13 +52,6 @@ namespace PhotoGalary.Controllers
                 return BadRequest();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            var result = await _mediator.Send(new DeletePhotoByIdCommand { Id = id });
-            return Ok(result);
-        }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdatePhotoCommand command)
         {
@@ -87,5 +60,11 @@ namespace PhotoGalary.Controllers
             return Ok(result);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await _mediator.Send(new DeletePhotoByIdCommand { Id = id });
+            return Ok(result);
+        }
     }
 }

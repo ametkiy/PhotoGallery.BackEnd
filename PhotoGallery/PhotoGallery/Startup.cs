@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using PhotoGalary.Data;
+using PhotoGallery.Data;
 using PhotoGallery.Middleware;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace PhotoGalary
+namespace PhotoGallery
 {
     public class Startup
     {

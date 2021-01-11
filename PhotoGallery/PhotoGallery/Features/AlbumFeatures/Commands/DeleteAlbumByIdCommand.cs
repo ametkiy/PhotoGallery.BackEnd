@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using PhotoGalary.Data;
+using PhotoGallery.Data;
+using PhotoGallery.Exceptions;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhotoGalary.Features.AlbumFeatures.Commands
+namespace PhotoGallery.Features.AlbumFeatures.Commands
 {
     public class DeleteAlbumByIdCommand : IRequest<Guid>
     {
@@ -21,7 +22,10 @@ namespace PhotoGalary.Features.AlbumFeatures.Commands
             public async Task<Guid> Handle(DeleteAlbumByIdCommand command, CancellationToken cancellationToken)
             {
                 var album = await _context.Albums.FirstOrDefaultAsync(a => a.Id == command.Id);
-                if (album == null) return default;
+
+                if (album == null) 
+                    throw new AlbumNotFoundException(command.Id);
+
                 _context.Albums.Remove(album);
                 await _context.SaveChangesAsync(cancellationToken);
                 return album.Id;

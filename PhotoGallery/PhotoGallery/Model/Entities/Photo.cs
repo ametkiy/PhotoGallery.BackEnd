@@ -1,6 +1,8 @@
-﻿using System;
+﻿using PhotoGallery.Model.Entities;
+using System;
+using System.Collections.Generic;
 
-namespace PhotoGalary.Model
+namespace PhotoGallery.Model
 {
     public class Photo : BaseModel
     {
@@ -13,5 +15,7 @@ namespace PhotoGalary.Model
         public byte[] PhotoData { get; set; }
 
         public DateTime AddDate { get; set; }
+
+        public List<Tag> Tags { get; set; } = new List<Tag>();
     }
 }

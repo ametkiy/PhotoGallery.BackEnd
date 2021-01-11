@@ -13,5 +13,6 @@ namespace PhotoGallery.Model.DTO
         public byte[] PhotoData { get; set; }
 
         public DateTime AddDate { get; set; }
+        public string Tags { get; set; }
     }
 }

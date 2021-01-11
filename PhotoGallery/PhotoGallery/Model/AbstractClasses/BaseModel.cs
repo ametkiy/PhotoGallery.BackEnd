@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PhotoGalary.Model
+namespace PhotoGallery.Model
 {
     public abstract class BaseModel
     {
