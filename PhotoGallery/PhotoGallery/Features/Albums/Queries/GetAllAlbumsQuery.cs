@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PhotoGallery.Data;
 using PhotoGallery.Model;
@@ -16,21 +18,18 @@ namespace PhotoGallery.Features.AlbumFeatures.Queries
         public class GetAllAlbumsQueryHandler : IRequestHandler<GetAllAlbumsQuery, IEnumerable<AlbumDto>>
         {
             private readonly IPhotoGalleryContext _context;
-            public GetAllAlbumsQueryHandler(IPhotoGalleryContext context)
+            private readonly IMapper _mapper;
+
+            public GetAllAlbumsQueryHandler(IPhotoGalleryContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
             public async Task<IEnumerable<AlbumDto>> Handle(GetAllAlbumsQuery request, CancellationToken cancellationToken)
             {
-                var albumList = await _context.Albums
-                    .Select(a => new AlbumDto
-                    {
-                        Id = a.Id,
-                        Title = a.Title,
-                        Description = a.Description,
-                        Tags = String.Join(";", a.Tags.Select(t => t.Name).ToArray())
-                    })
-                    .OrderBy(p =>p.Title)
+                var albumList = await _context.Albums.AsNoTracking()
+                    .OrderBy(p => p.Title)
+                    .ProjectTo<AlbumDto>(_mapper.ConfigurationProvider)
                     .ToListAsync();
                 return albumList.AsReadOnly();
             }

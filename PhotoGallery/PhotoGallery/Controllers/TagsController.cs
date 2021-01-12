@@ -3,6 +3,8 @@ using LightQuery.EntityFrameworkCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PhotoGallery.Features.PhotoFeatures.Queries;
+using PhotoGallery.Features.Tags.Commands;
+using PhotoGallery.Features.Tags.Query;
 using PhotoGallery.Model.DTO;
 using System;
 using System.Linq;
@@ -31,6 +33,20 @@ namespace PhotoGallery.Controllers
                 result = await _mediator.Send(new GetPhotosQuery { });
             else
                 result = await _mediator.Send(new GetPhotosByTagQuery { Tag = tag });
+            return Ok(result);
+        }
+
+        [HttpGet("{name}")]
+        public async Task<IActionResult> GetTagByName(string name)
+        {
+            var result = await _mediator.Send(new GetTagByNameQuery { Name = name });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateTagCommand command)
+        {
+            var result = await _mediator.Send(command);
             return Ok(result);
         }
     }

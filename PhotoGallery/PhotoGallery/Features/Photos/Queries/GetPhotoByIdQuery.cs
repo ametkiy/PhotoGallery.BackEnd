@@ -9,32 +9,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace PhotoGallery.Features.PhotoFeatures.Queries
 {
-    public class GetPhotoByIdQuery : IRequest<PhotoDto>
+    public class GetPhotoByIdQuery : IRequest<PhotoDataDto>
     {
         public Guid Id { get; set; }
-        public class GetPhotoByIdQueryHandler : IRequestHandler<GetPhotoByIdQuery, PhotoDto>
+        public class GetPhotoByIdQueryHandler : IRequestHandler<GetPhotoByIdQuery, PhotoDataDto>
         {
             private readonly IPhotoGalleryContext _context;
-            public GetPhotoByIdQueryHandler(IPhotoGalleryContext context)
+            private readonly IMapper _mapper;
+            public GetPhotoByIdQueryHandler(IPhotoGalleryContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
-            public async Task<PhotoDto> Handle(GetPhotoByIdQuery query, CancellationToken cancellationToken)
+            public async Task<PhotoDataDto> Handle(GetPhotoByIdQuery query, CancellationToken cancellationToken)
             {
-                var photoDto = await (from p in _context.Photos
-                                        where p.Id == query.Id
-                                        select new PhotoDto { 
-                                            Id = p.Id,
-                                            FileName = p.FileName,
-                                            AlbumId = p.AlbumId,
-                                            AddDate = p.AddDate,
-                                            Description = p.Description,
-                                            PhotoData = p.PhotoData,
-                                            Tags = String.Join(";", p.Tags.Select(t=>t.Name).ToArray())
-                                        }).FirstOrDefaultAsync();
+                var photoDto = await _context.Photos.AsNoTracking()
+                                     .Where(p=> p.Id == query.Id)
+                                     .ProjectTo<PhotoDataDto>(_mapper.ConfigurationProvider)
+                                     .FirstOrDefaultAsync();
 
                 if (photoDto == null)
                     throw new PhotoNotFoundException(query.Id);

@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PhotoGallery.Data;
 using PhotoGallery.Model.DTO;
 using System;
@@ -13,23 +16,17 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
         public class GetAllPhotosQueryHandler : IRequestHandler<GetPhotosQuery, IQueryable<PhotoDto>>
         {
             private readonly IPhotoGalleryContext _context;
-            public GetAllPhotosQueryHandler(IPhotoGalleryContext context)
+            private readonly IMapper _mapper;
+            public GetAllPhotosQueryHandler(IPhotoGalleryContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
             public Task<IQueryable<PhotoDto>> Handle(GetPhotosQuery request, CancellationToken cancellationToken)
             {
-                IQueryable<PhotoDto> photoListQuery = _context.Photos
+                IQueryable<PhotoDto> photoListQuery = _context.Photos.AsNoTracking()
                     .OrderBy(p => p.AddDate)
-                    .Select(p => new PhotoDto
-                    {
-                        Id = p.Id,
-                        FileName = p.FileName,
-                        AddDate = p.AddDate,
-                        Description = p.Description,
-                        AlbumId = p.AlbumId,
-                        Tags = String.Join(";", p.Tags.Select(t => t.Name).ToArray())
-                    });
+                    .ProjectTo<PhotoDto>(_mapper.ConfigurationProvider);
 
                 return Task.FromResult(photoListQuery);
             }

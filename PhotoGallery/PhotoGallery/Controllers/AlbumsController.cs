@@ -30,9 +30,9 @@ namespace PhotoGallery.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid Id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var result = await _mediator.Send(new GetAlbumByIdQuery { Id = Id });
+            var result = await _mediator.Send(new GetAlbumByIdQuery { Id = id });
             return Ok(result);
         }
 

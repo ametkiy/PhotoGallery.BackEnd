@@ -1,10 +1,10 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PhotoGallery.Data;
-using PhotoGallery.Model;
 using PhotoGallery.Model.DTO;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,9 +18,11 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
         public class GetPhotoByTagQueryHandler : IRequestHandler<GetPhotosByTagQuery, IQueryable<PhotoDto>>
         {
             private readonly IPhotoGalleryContext _context;
-            public GetPhotoByTagQueryHandler(IPhotoGalleryContext context)
+            private readonly IMapper _mapper;
+            public GetPhotoByTagQueryHandler(IPhotoGalleryContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
 
             public async Task<IQueryable<PhotoDto>> Handle(GetPhotosByTagQuery request, CancellationToken cancellationToken)
@@ -35,15 +37,7 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
                                           where p.AlbumId != null && (_context.Albums.Where(a => a.Tags.Any(at => EF.Functions.Like(at.Name, request.Tag))).Select(a => a.Id)).Contains((Guid)p.AlbumId)
                                           select p;
 
-                resultQuery =  (photosWithTagQuery.Union(albumTagPhotosQuery)).Select(p => new PhotoDto
-                {
-                    Id = p.Id,
-                    FileName = p.FileName,
-                    AddDate = p.AddDate,
-                    Description = p.Description,
-                    AlbumId = p.AlbumId,
-                    Tags = String.Join(";", p.Tags.Select(t => t.Name).ToArray())
-                });
+                resultQuery =  (photosWithTagQuery.Union(albumTagPhotosQuery)).ProjectTo<PhotoDto>(_mapper.ConfigurationProvider);
 
                 return await Task.FromResult(resultQuery);
             }

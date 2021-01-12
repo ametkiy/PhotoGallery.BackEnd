@@ -18,7 +18,7 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
         public Guid Id { get; set; }
         public string Description { get; set; }
         public Guid? AlbumId { get; set; }
-        public string Tags { get; set; }
+        public List<Tag> Tags { get; set; } 
         public class UpdatePhotoCommandHandler : IRequestHandler<UpdatePhotoCommand, Guid>
         {
             private readonly IPhotoGalleryContext _context;
@@ -41,27 +41,11 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
 
                     photo.Tags.Clear();
 
-                    if (!String.IsNullOrWhiteSpace(command.Tags))
+                    foreach (var tag in command.Tags)
                     {
-                        var tagsArray = command.Tags.Split(";");
-                        foreach (var tag in tagsArray)
-                        {
-                            if (!String.IsNullOrWhiteSpace(tag))
-                            {
-                                var tmp = _context.Tags.FirstOrDefault(t => t.Name == tag);
-                                if (tmp != null)
-                                {
-                                    if (!photo.Tags.Contains(tmp))
-                                        photo.Tags.Add(tmp);
-                                }
-                                else
-                                {
-                                    Tag tmpTag = new Tag { Name = tag };
-                                    _context.Tags.Add(tmpTag);
-                                    photo.Tags.Add(tmpTag);
-                                }
-                            }
-                        }
+                        Tag tmp = _context.Tags.FirstOrDefault(t => t.Id == tag.Id);
+                        if (tmp != null)
+                            photo.Tags.Add(tmp);
                     }
 
                     await _context.SaveChangesAsync(cancellationToken);

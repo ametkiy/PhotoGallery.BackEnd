@@ -1,5 +1,7 @@
 ﻿using PhotoGallery.Model.AbstractClasses;
+using PhotoGallery.Model.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace PhotoGallery.Model.DTO
 {
@@ -10,9 +12,7 @@ namespace PhotoGallery.Model.DTO
 
         public Guid? AlbumId { get; set; }
 
-        public byte[] PhotoData { get; set; }
-
         public DateTime AddDate { get; set; }
-        public string Tags { get; set; }
+        public List<Tag> Tags { get; set; }
     }
 }
