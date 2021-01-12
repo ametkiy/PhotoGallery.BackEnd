@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace PhotoGallery.Features.PhotoFeatures.Commands
 {
-    public class DeletePhotoByIdCommand : IRequest<Guid>
+    public class DeletePhotoByIdCommand : IRequest<Unit>
     {
         public Guid Id { get; set; }
 
-        public class DeletePhotoByIdCommandHandler : IRequestHandler<DeletePhotoByIdCommand, Guid>
+        public class DeletePhotoByIdCommandHandler : IRequestHandler<DeletePhotoByIdCommand, Unit>
         {
             private readonly IPhotoGalleryContext _context;
             public DeletePhotoByIdCommandHandler(IPhotoGalleryContext context)
             {
                 _context = context;
             }
-            public async Task<Guid> Handle(DeletePhotoByIdCommand command, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(DeletePhotoByIdCommand command, CancellationToken cancellationToken)
             {
                 var photo = await _context.Photos.Where(a => a.Id == command.Id).FirstOrDefaultAsync();
 
@@ -29,7 +29,7 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
 
                 _context.Photos.Remove(photo);
                 await _context.SaveChangesAsync(cancellationToken);
-                return photo.Id;
+                return Unit.Value;
             }
         }
     }

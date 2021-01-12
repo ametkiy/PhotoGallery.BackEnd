@@ -40,7 +40,7 @@ namespace PhotoGallery.Middleware
 
         private static async Task<HttpContext> HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            HttpStatusCode code = HttpStatusCode.InternalServerError;
+            int code = StatusCodes.Status500InternalServerError;
 
             if (exception is BaseException)
                  code = (exception as BaseException).ErrorCode;

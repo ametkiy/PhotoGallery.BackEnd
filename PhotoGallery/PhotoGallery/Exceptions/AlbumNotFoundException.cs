@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 
 namespace PhotoGallery.Exceptions
 {
     public class AlbumNotFoundException : BaseException
     {
-        public override HttpStatusCode ErrorCode { get; } = HttpStatusCode.NotFound;
+        public override int ErrorCode { get; } = StatusCodes.Status404NotFound;
 
         public AlbumNotFoundException()
         {

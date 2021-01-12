@@ -12,19 +12,19 @@ using System.Threading.Tasks;
 namespace PhotoGallery.Controllers
 {
     [ApiController]
-    [Route("/api/photo")]
-    public class PhotoController : Controller
+    [Route("/api/photos")]
+    public class PhotosController : Controller
     {
         private IMediator _mediator;
 
-        public PhotoController(IMediator mediator)
+        public PhotosController(IMediator mediator)
         {
             this._mediator = mediator;
         }
 
         [AsyncLightQuery(forcePagination: false, defaultPageSize: 10)]
         [ProducesResponseType(typeof(PaginationResult<PhotoDto>), 200)]
-        [HttpGet("/api/photos")]
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetPhotosQuery { });

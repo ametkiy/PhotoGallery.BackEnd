@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 namespace PhotoGallery.Controllers
 {
     [ApiController]
-    [Route("/api/tag")]
-    public class TagController : Controller
+    [Route("/api/tags")]
+    public class TagsController : Controller
     {
         private IMediator _mediator;
 
-        public TagController(IMediator mediator)
+        public TagsController(IMediator mediator)
         {
             this._mediator = mediator;
         }

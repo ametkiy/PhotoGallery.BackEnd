@@ -31,3 +31,5 @@ ipch/
 *.bak
 /PhotoGallery/.vs
 PhotoGallery/.vs/PhotoGallery/DesignTimeBuild/.dtbcache.v2
+PhotoGallery/PhotoGallery/PhotoGallery.db
+PhotoGallery/.vs/PhotoGallery/DesignTimeBuild/.dtbcache.v2

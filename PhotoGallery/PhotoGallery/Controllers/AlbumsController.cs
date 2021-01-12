@@ -12,17 +12,17 @@ using System.Threading.Tasks;
 namespace PhotoGallery.Controllers
 {
     [ApiController]
-    [Route("/api/album")]
-    public class AlbumController : ControllerBase
+    [Route("/api/albums")]
+    public class AlbumsController : ControllerBase
     {
         private IMediator _mediator;
 
-        public AlbumController(IMediator mediator)
+        public AlbumsController(IMediator mediator)
         {
             this._mediator = mediator;
         }
 
-        [HttpGet("/api/albums")]
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetAllAlbumsQuery());
