@@ -28,6 +28,7 @@ namespace PhotoGallery.Features.AlbumFeatures.Queries
             public async Task<IEnumerable<AlbumDto>> Handle(GetAllAlbumsQuery request, CancellationToken cancellationToken)
             {
                 var albumList = await _context.Albums.AsNoTracking()
+                    .Include(a=>a.Tags)
                     .OrderBy(p => p.Title)
                     .ProjectTo<AlbumDto>(_mapper.ConfigurationProvider)
                     .ToListAsync();

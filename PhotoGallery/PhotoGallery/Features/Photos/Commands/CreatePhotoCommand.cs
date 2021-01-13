@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using PhotoGallery.Data;
 using PhotoGallery.Model;
 using System;
@@ -8,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using PhotoGallery;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using PhotoGallery.Exceptions;
@@ -32,6 +30,8 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
 
             public async Task<IEnumerable<Guid>> Handle(CreatePhotoCommand command, CancellationToken cancellationToken)
             {
+                if (command.FormFiles.Count == 0)
+                    throw new FieldIsEmptyException("No file data");
                 List<Photo> photos = new List<Photo>();
                 var fileSizeLimit = _config.GetValue<long>("FileSizeLimit");
 
@@ -47,8 +47,9 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
                     {
                         file.CopyTo(ms);
                         var fileBytes = ms.ToArray();
+                        var fileMimeType = CheckMimeType.GetMimeType(fileBytes, file.FileName);
 
-                        if (CheckMimeType.GetMimeType(fileBytes, file.FileName) == CheckMimeType.DefaultMimeTipe)
+                        if (fileMimeType == CheckMimeType.DefaultMimeTipe)
                         {
                             throw new UnsupportedFileFormatException(file.FileName);
                         }
@@ -57,8 +58,8 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
                             var photo = new Photo();
                             photo.FileName = file.FileName;
                             photo.PhotoData = fileBytes;
-                            photo.Description = "";
                             photo.AddDate = DateTime.Now;
+                            photo.FileMimeType = fileMimeType;
                             if (command.AlbumId != Guid.Empty)
                                 photo.AlbumId = command.AlbumId;
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PhotoGallery.Features.PhotoFeatures.Commands;
 using PhotoGallery.Features.PhotoFeatures.Queries;
+using PhotoGallery.Features.Photos.Queries;
 using PhotoGallery.Model.DTO;
 using System;
 using System.Threading.Tasks;
@@ -39,17 +40,18 @@ namespace PhotoGallery.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}/file")]
+        public async Task<IActionResult> GetFileById(Guid id)
+        {
+            var result = await _mediator.Send(new GetPhotoFileByIdQuery { Id = id });
+            return result;
+        }
+
         [HttpPost, DisableRequestSizeLimit]
         public async Task<IActionResult> Create([FromForm] IFormFileCollection Files, [FromForm] Guid? AlbumId)
         {
-            if (Files.Count > 0)
-            {
-                var result = (await _mediator.Send(new CreatePhotoCommand { FormFiles = Files, AlbumId = AlbumId })); ;
-
-                return Ok(result);
-            }
-            else
-                return BadRequest();
+            var result = (await _mediator.Send(new CreatePhotoCommand { FormFiles = Files, AlbumId = AlbumId })); ;
+            return Ok(result);
         }
 
         [HttpPut("{id}")]

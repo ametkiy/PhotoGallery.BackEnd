@@ -17,5 +17,7 @@ namespace PhotoGallery.Model
         public DateTime AddDate { get; set; }
 
         public List<Tag> Tags { get; set; } = new List<Tag>();
+
+        public string FileMimeType { get; set; }
     }
 }
