@@ -1,7 +1,10 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PhotoGallery.Data;
 using PhotoGallery.Exceptions;
+using PhotoGallery.Model;
+using PhotoGallery.Model.Commands;
 using PhotoGallery.Model.Entities;
 using System;
 using System.Collections.Generic;
@@ -18,21 +21,18 @@ namespace PhotoGallery.Features.AlbumFeatures.Commands
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public List<Tag> Tags { get; set; }
+        public List<TagShort> Tags { get; set; }
         public class UpdateAlbumCommandHandler : IRequestHandler<UpdateAlbumCommand, Guid>
         {
             private readonly IPhotoGalleryContext _context;
-            public UpdateAlbumCommandHandler(IPhotoGalleryContext context)
+            private readonly IMapper _mapper;
+            public UpdateAlbumCommandHandler(IPhotoGalleryContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
             public async Task<Guid> Handle(UpdateAlbumCommand command, CancellationToken cancellationToken)
             {
-                if (String.IsNullOrEmpty(command.Title) || String.IsNullOrWhiteSpace(command.Title))
-                {
-                    throw new FieldIsEmptyException("Album title must be completed");
-                }
-
                 var album = _context.Albums.Include(t => t.Tags).FirstOrDefault(a => a.Id == command.Id);
 
                 if (album == null)
@@ -41,8 +41,7 @@ namespace PhotoGallery.Features.AlbumFeatures.Commands
                 }
                 else
                 {
-                    album.Title = command.Title;
-                    album.Description = command.Description;
+                    album = _mapper.Map<UpdateAlbumCommand, Album>(command, album);
 
                     album.Tags.Clear();
                     foreach (var tag in command.Tags)

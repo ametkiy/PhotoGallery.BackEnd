@@ -1,7 +1,10 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PhotoGallery.Data;
 using PhotoGallery.Exceptions;
+using PhotoGallery.Model;
+using PhotoGallery.Model.Commands;
 using PhotoGallery.Model.Entities;
 using System;
 using System.Collections.Generic;
@@ -18,13 +21,15 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
         public Guid Id { get; set; }
         public string Description { get; set; }
         public Guid? AlbumId { get; set; }
-        public List<Tag> Tags { get; set; } 
+        public List<TagShort> Tags { get; set; } 
         public class UpdatePhotoCommandHandler : IRequestHandler<UpdatePhotoCommand, Guid>
         {
             private readonly IPhotoGalleryContext _context;
-            public UpdatePhotoCommandHandler(IPhotoGalleryContext context)
+            private readonly IMapper _mapper;
+            public UpdatePhotoCommandHandler(IPhotoGalleryContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
             public async Task<Guid> Handle(UpdatePhotoCommand command, CancellationToken cancellationToken)
             {
@@ -36,11 +41,9 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
                 }
                 else
                 {
-                    photo.Description = command.Description;
-                    photo.AlbumId = command.AlbumId;
+                    photo = _mapper.Map<UpdatePhotoCommand, Photo>(command, photo);
 
                     photo.Tags.Clear();
-
                     foreach (var tag in command.Tags)
                     {
                         Tag tmp = _context.Tags.FirstOrDefault(t => t.Id == tag.Id);

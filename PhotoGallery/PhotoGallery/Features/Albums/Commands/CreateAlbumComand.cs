@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using PhotoGallery.Model.Commands;
 
 namespace PhotoGallery.Features.AlbumFeatures.Commands
 {
@@ -16,7 +17,7 @@ namespace PhotoGallery.Features.AlbumFeatures.Commands
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public List<Tag> Tags { get; set; } = new List<Tag>();
+        public List<TagShort> Tags { get; set; } = new List<TagShort>();
 
         public class CreateAlbumComandHandler : IRequestHandler<CreateAlbumCommand, Guid>
         {
@@ -31,11 +32,6 @@ namespace PhotoGallery.Features.AlbumFeatures.Commands
             {
                 Album album = _mapper.Map<CreateAlbumCommand, Album>(command);
 
-                if(String.IsNullOrWhiteSpace(album.Title))
-                {
-                    throw new FieldIsEmptyException("Album title must be completed");
-                }
-
                 foreach (var tag in command.Tags)
                 {
                     Tag tmp = _context.Tags.FirstOrDefault(t => t.Id == tag.Id);
@@ -49,4 +45,6 @@ namespace PhotoGallery.Features.AlbumFeatures.Commands
             }
         }
     }
+
+
 }

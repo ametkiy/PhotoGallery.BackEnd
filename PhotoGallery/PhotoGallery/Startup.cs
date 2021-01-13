@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using PhotoGallery.Configurations;
 using PhotoGallery.Data;
 using PhotoGallery.Middleware;
+using PhotoGallery.PipeLineBehaviors;
 using System.Reflection;
 
 
@@ -36,6 +38,11 @@ namespace PhotoGallery
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddControllers();
 
+            
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+
+
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
@@ -50,6 +57,8 @@ namespace PhotoGallery
             services.AddSingleton(mapper);
 
             services.AddSwaggerGen();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
