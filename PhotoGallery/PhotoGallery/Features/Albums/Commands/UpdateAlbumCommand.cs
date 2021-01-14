@@ -41,7 +41,7 @@ namespace PhotoGallery.Features.AlbumFeatures.Commands
                 }
                 else
                 {
-                    album = _mapper.Map<UpdateAlbumCommand, Album>(command, album);
+                    _mapper.Map(command, album);
 
                     album.Tags.Clear();
                     foreach (var tag in command.Tags)

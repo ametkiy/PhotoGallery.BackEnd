@@ -27,20 +27,15 @@ namespace PhotoGallery.Features.Tags.Commands
             }
             public async Task<Guid> Handle(CreateTagCommand command, CancellationToken cancellationToken)
             {
-                if (String.IsNullOrWhiteSpace(command.Name))
-                {
-                    throw new FieldIsEmptyException("Tag name must be completed");
-                }
 
-                Tag tag = _context.Tags.FirstOrDefault(t => t.Name.ToUpper() == command.Name.ToUpper());
+                var tag = _context.Tags.FirstOrDefault(t => t.Name.ToUpper() == command.Name.ToUpper());
                 if (tag != null)
                 {
                     return tag.Id;
                 }
                 else
                 {
-                    tag = new Tag();
-                    tag.Name = command.Name;
+                    tag = _mapper.Map<Tag>(command);
 
                     _context.Tags.Add(tag);
                     await _context.SaveChangesAsync(cancellationToken);

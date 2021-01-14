@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using PhotoGallery.Features.AlbumFeatures.Commands;
 using PhotoGallery.Features.PhotoFeatures.Commands;
+using PhotoGallery.Features.Tags.Commands;
 using PhotoGallery.Model;
 using PhotoGallery.Model.DTO;
 using PhotoGallery.Model.Entities;
@@ -25,6 +26,8 @@ namespace PhotoGallery.Configurations
 
             CreateMap<Tag, TagDto>();
             CreateMap<TagDto, Tag>();
+
+            CreateMap<CreateTagCommand, Tag>();
 
         }
     }

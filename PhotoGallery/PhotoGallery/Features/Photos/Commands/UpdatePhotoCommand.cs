@@ -41,7 +41,7 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
                 }
                 else
                 {
-                    photo = _mapper.Map<UpdatePhotoCommand, Photo>(command, photo);
+                    _mapper.Map(command, photo);
 
                     photo.Tags.Clear();
                     foreach (var tag in command.Tags)

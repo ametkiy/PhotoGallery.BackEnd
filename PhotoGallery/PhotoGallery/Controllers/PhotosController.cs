@@ -44,7 +44,7 @@ namespace PhotoGallery.Controllers
         public async Task<IActionResult> GetFileById(Guid id)
         {
             var result = await _mediator.Send(new GetPhotoFileByIdQuery { Id = id });
-            return result;
+            return Ok(result);
         }
 
         [HttpPost, DisableRequestSizeLimit]

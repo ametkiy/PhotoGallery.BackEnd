@@ -21,50 +21,32 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
         public class CreatePhotoCommandHandler : IRequestHandler<CreatePhotoCommand, IEnumerable<Guid>>
         {
             private readonly IPhotoGalleryContext _context;
-            private readonly IConfiguration _config;
-            public CreatePhotoCommandHandler(IPhotoGalleryContext context, IConfiguration config)
+            public CreatePhotoCommandHandler(IPhotoGalleryContext context)
             {
                 _context = context;
-                _config = config;
             }
 
             public async Task<IEnumerable<Guid>> Handle(CreatePhotoCommand command, CancellationToken cancellationToken)
             {
-                if (command.FormFiles.Count == 0)
-                    throw new FieldIsEmptyException("No file data");
                 List<Photo> photos = new List<Photo>();
-                var fileSizeLimit = _config.GetValue<long>("FileSizeLimit");
 
                 foreach (var file in command.FormFiles)
                 {
-                    if (file.Length == 0)
-                        throw new FileSizeException($"File {file.FileName} has no content.");
-
-                    if (fileSizeLimit > 0 && file.Length > fileSizeLimit)
-                        throw new FileSizeException(file.FileName, file.Length, fileSizeLimit);
-
                     using (var ms = new MemoryStream())
                     {
                         file.CopyTo(ms);
                         var fileBytes = ms.ToArray();
                         var fileMimeType = CheckMimeType.GetMimeType(fileBytes, file.FileName);
 
-                        if (fileMimeType == CheckMimeType.DefaultMimeTipe)
-                        {
-                            throw new UnsupportedFileFormatException(file.FileName);
-                        }
-                        else
-                        {
-                            var photo = new Photo();
-                            photo.FileName = file.FileName;
-                            photo.PhotoData = fileBytes;
-                            photo.AddDate = DateTime.Now;
-                            photo.FileMimeType = fileMimeType;
-                            if (command.AlbumId != Guid.Empty)
-                                photo.AlbumId = command.AlbumId;
+                        var photo = new Photo();
+                        photo.FileName = file.FileName;
+                        photo.PhotoData = fileBytes;
+                        photo.AddDate = DateTime.Now;
+                        photo.FileMimeType = fileMimeType;
+                        if (command.AlbumId != Guid.Empty)
+                            photo.AlbumId = command.AlbumId;
 
-                            photos.Add(photo);
-                        }
+                        photos.Add(photo);
                     }
                 }
 

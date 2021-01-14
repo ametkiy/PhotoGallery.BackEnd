@@ -30,7 +30,7 @@ namespace PhotoGallery.Features.AlbumFeatures.Commands
             }
             public async Task<Guid> Handle(CreateAlbumCommand command, CancellationToken cancellationToken)
             {
-                Album album = _mapper.Map<CreateAlbumCommand, Album>(command);
+                var album = _mapper.Map<Album>(command);
 
                 foreach (var tag in command.Tags)
                 {
