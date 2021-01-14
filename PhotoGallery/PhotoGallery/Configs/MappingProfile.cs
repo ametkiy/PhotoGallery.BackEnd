@@ -23,6 +23,7 @@ namespace PhotoGallery.Configurations
             CreateMap<UpdatePhotoCommand, Photo>().ForMember(c => c.Tags, act => act.Ignore());
 
             CreateMap<Photo, PhotoDataDto>();
+            CreateMap<Photo, PhotoFileDto>();
 
             CreateMap<Tag, TagDto>();
             CreateMap<TagDto, Tag>();
