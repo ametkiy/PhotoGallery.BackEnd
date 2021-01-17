@@ -1,6 +1,7 @@
-using AutoMapper;
+﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -8,11 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using PhotoGallery.Configurations;
 using PhotoGallery.Data;
 using PhotoGallery.Middleware;
 using PhotoGallery.Model.Entities;
 using PhotoGallery.PipeLineBehaviors;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -39,9 +43,9 @@ namespace PhotoGallery
 
             services.AddDbContext<PhotoGalleryContext>(options =>
             {
-            // Configure the context to use Microsoft SQL Server.
-            options.UseSqlite(
-                    Configuration.GetConnectionString("DefaultConnection"));
+                // Configure the context to use Microsoft SQL Server.
+                options.UseSqlite(
+                        Configuration.GetConnectionString("DefaultConnection"));
 
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
@@ -68,44 +72,44 @@ namespace PhotoGallery
                 // Register the OpenIddict core components.
                 .AddCore(options =>
                 {
-                                // Configure OpenIddict to use the Entity Framework Core stores and models.
-                                // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
-                                options.UseEntityFrameworkCore()
-                           .UseDbContext<PhotoGalleryContext>();
+                    // Configure OpenIddict to use the Entity Framework Core stores and models.
+                    // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
+                    options.UseEntityFrameworkCore()
+               .UseDbContext<PhotoGalleryContext>();
                 })
 
                 // Register the OpenIddict server components.
                 .AddServer(options =>
                 {
-                                // Enable the token endpoint.
-                                options.SetTokenEndpointUris("/connect/token");
+                    // Enable the token endpoint.
+                    options.SetTokenEndpointUris("/connect/token");
 
-                                // Enable the password flow.
-                                options.AllowPasswordFlow();
+                    // Enable the password flow.
+                    options.AllowPasswordFlow();
 
-                                // Accept anonymous clients (i.e clients that don't send a client_id).
-                                options.AcceptAnonymousClients();
+                    // Accept anonymous clients (i.e clients that don't send a client_id).
+                    options.AcceptAnonymousClients();
 
-                                // Register the signing and encryption credentials.
-                                options.AddDevelopmentEncryptionCertificate()
-                           .AddDevelopmentSigningCertificate();
+                    // Register the signing and encryption credentials.
+                    options.AddDevelopmentEncryptionCertificate()
+               .AddDevelopmentSigningCertificate();
 
-                                // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
-                                options.UseAspNetCore()
-                           .EnableTokenEndpointPassthrough();
+                    // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+                    options.UseAspNetCore()
+               .EnableTokenEndpointPassthrough();
                 })
 
                 // Register the OpenIddict validation components.
                 .AddValidation(options =>
                 {
-                                // Import the configuration from the local OpenIddict server instance.
-                                options.UseLocalServer();
+                    // Import the configuration from the local OpenIddict server instance.
+                    options.UseLocalServer();
 
-                                // Register the ASP.NET Core host.
-                                options.UseAspNetCore();
+                    // Register the ASP.NET Core host.
+                    options.UseAspNetCore();
                 }
             );
-             
+
 
             services.AddScoped<IPhotoGalleryContext>(provider => provider.GetService<PhotoGalleryContext>());
 
@@ -119,7 +123,7 @@ namespace PhotoGallery
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddControllers();
 
-            
+
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
 
@@ -131,9 +135,34 @@ namespace PhotoGallery
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(setup =>
+            {
+                // Include 'SecurityScheme' to use JWT Authentication
+                var jwtSecurityScheme = new OpenApiSecurityScheme
+                {
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Name = "JWT Authentication",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Description = "Put **_ONLY_** your JWT Bearer token on textbox below!",
 
-            
+                    Reference = new OpenApiReference
+                    {
+                        Id = JwtBearerDefaults.AuthenticationScheme,
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+
+                setup.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+
+                setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
+                        { jwtSecurityScheme, Array.Empty<string>() }
+                    });
+
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -13,6 +13,6 @@ namespace PhotoGallery.Model.DTO
         public Guid? AlbumId { get; set; }
 
         public DateTime AddDate { get; set; }
-        public List<Tag> Tags { get; set; }
+        public List<TagDto> Tags { get; set; }
     }
 }
