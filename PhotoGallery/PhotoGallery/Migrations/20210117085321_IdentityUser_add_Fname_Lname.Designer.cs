@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhotoGallery.Data;
 
 namespace PhotoGallery.Migrations
 {
     [DbContext(typeof(PhotoGalleryContext))]
-    partial class PhotoGalleryContextModelSnapshot : ModelSnapshot
+    [Migration("20210117085321_IdentityUser_add_Fname_Lname")]
+    partial class IdentityUser_add_Fname_Lname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,11 +398,9 @@ namespace PhotoGallery.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FirsName")
-                        .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
-                        .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")

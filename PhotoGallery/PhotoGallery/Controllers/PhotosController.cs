@@ -1,8 +1,10 @@
 ﻿using LightQuery.Client;
 using LightQuery.EntityFrameworkCore;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OpenIddict.Validation.AspNetCore;
 using PhotoGallery.Features.PhotoFeatures.Commands;
 using PhotoGallery.Features.PhotoFeatures.Queries;
 using PhotoGallery.Features.Photos.Queries;
@@ -14,6 +16,7 @@ namespace PhotoGallery.Controllers
 {
     [ApiController]
     [Route("/api/photos")]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class PhotosController : Controller
     {
         private IMediator _mediator;

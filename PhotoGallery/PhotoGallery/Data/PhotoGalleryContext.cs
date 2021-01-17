@@ -1,21 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PhotoGallery.Model;
 using PhotoGallery.Model.Entities;
 
 namespace PhotoGallery.Data
 {
-    public class PhotoGalleryContext : DbContext, IPhotoGalleryContext
+    public class PhotoGalleryContext : IdentityDbContext<ApplicationUser>, IPhotoGalleryContext
     {
         public DbSet<Album> Albums { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Tag> Tags { get; set; }
 
         public PhotoGalleryContext(DbContextOptions<PhotoGalleryContext> options)
-            : base(options)
-        { }
+                : base(options)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Album>()
                 .ToTable("Albums").HasKey(p => p.Id);
             modelBuilder.Entity<Album>()
@@ -47,6 +52,11 @@ namespace PhotoGallery.Data
             modelBuilder.Entity<Tag>().Property(t => t.Name).IsRequired().HasMaxLength(100);
 
 
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(p => p.FirsName).HasMaxLength(80);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(p => p.LastName).HasMaxLength(80);
         }
     }
 }

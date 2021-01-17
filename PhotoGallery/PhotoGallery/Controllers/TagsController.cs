@@ -1,7 +1,9 @@
 ﻿using LightQuery.Client;
 using LightQuery.EntityFrameworkCore;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OpenIddict.Validation.AspNetCore;
 using PhotoGallery.Features.PhotoFeatures.Queries;
 using PhotoGallery.Features.Tags.Commands;
 using PhotoGallery.Features.Tags.Query;
@@ -14,6 +16,7 @@ namespace PhotoGallery.Controllers
 {
     [ApiController]
     [Route("/api/tags")]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class TagsController : Controller
     {
         private IMediator _mediator;

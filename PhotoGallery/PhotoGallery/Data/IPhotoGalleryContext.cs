@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PhotoGallery.Model;
 using PhotoGallery.Model.Entities;
 using System.Threading;
@@ -13,5 +14,6 @@ namespace PhotoGallery.Data
         DbSet<Tag> Tags { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+
     }
 }
