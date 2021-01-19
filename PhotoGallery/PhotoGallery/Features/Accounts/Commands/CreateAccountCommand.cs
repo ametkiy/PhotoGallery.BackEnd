@@ -27,10 +27,16 @@ namespace PhotoGallery.Features.Accounts.Commands
             }
             public async Task<string> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
             {
-                var user = await _userManager.FindByNameAsync(request.Email);
+                var user = await _userManager.FindByNameAsync(request.UserName);
                 if (user != null)
                 {
-                    throw new ConflictNewUserException(request.Email);
+                    throw new ConflictNewUserException($"An account has already been registered for this User Name '{request.UserName}'.");
+                }
+
+                var user2 = await _userManager.FindByEmailAsync(request.Email);
+                if (user2 != null)
+                {
+                    throw new ConflictNewUserException($"An account has already been registered for this email '{request.Email}'.");
                 }
 
                 var newUser = new ApplicationUser { UserName = request.UserName, Email = request.Email, FirsName = request.FirstName, LastName = request.LastName };

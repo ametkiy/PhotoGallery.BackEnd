@@ -9,8 +9,8 @@ namespace PhotoGallery.Exceptions
         {
         }
 
-        public ConflictNewUserException(string email)
-            : base($"An account has already been registered for this email '{email}'.")
+        public ConflictNewUserException(string message)
+            : base(message)
         {
         }
     }
