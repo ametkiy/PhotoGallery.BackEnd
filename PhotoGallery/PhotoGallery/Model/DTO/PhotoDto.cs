@@ -14,5 +14,10 @@ namespace PhotoGallery.Model.DTO
 
         public DateTime AddDate { get; set; }
         public List<TagDto> Tags { get; set; }
+
+        public bool Private { get; set; }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PhotoGallery.Model;
 using PhotoGallery.Model.Entities;
+using System;
 
 namespace PhotoGallery.Data
 {
@@ -46,6 +47,12 @@ namespace PhotoGallery.Data
                 .HasMany<Tag>(t => t.Tags)
                 .WithMany(a => a.Photos)
                 .UsingEntity(u => u.ToTable("PhotosTags"));
+
+            modelBuilder.Entity<Photo>()
+                .HasOne<ApplicationUser>(p => p.ApplicationUser)
+                .WithMany(u => u.Photos)
+                .HasForeignKey(p => p.ApplicationUserId)
+                .OnDelete(DeleteBehavior.ClientCascade); ;
 
             modelBuilder.Entity<Tag>()
                 .ToTable("Tags").HasKey(p => p.Id);

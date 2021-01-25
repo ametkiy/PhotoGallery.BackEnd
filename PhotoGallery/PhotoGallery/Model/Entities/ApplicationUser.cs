@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace PhotoGallery.Model.Entities
 {
@@ -6,5 +7,7 @@ namespace PhotoGallery.Model.Entities
     {
         public string FirsName { get; set; }
         public string LastName { get; set; }
+
+        public List<Photo> Photos { get; set; }
     }
 }

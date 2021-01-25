@@ -90,13 +90,16 @@ namespace PhotoGallery
                     // Accept anonymous clients (i.e clients that don't send a client_id).
                     options.AcceptAnonymousClients();
 
+                    options.AddEphemeralEncryptionKey().AddEphemeralSigningKey();
+                       // .DisableAccessTokenEncryption();
+
                     // Register the signing and encryption credentials.
                     options.AddDevelopmentEncryptionCertificate()
-               .AddDevelopmentSigningCertificate();
+                        .AddDevelopmentSigningCertificate();
 
                     // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                     options.UseAspNetCore()
-               .EnableTokenEndpointPassthrough();
+                        .EnableTokenEndpointPassthrough();
                 })
 
                 // Register the OpenIddict validation components.
@@ -176,6 +179,7 @@ namespace PhotoGallery
             {
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             }
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseRouting();
 
@@ -197,8 +201,6 @@ namespace PhotoGallery
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
-
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
         }
     }

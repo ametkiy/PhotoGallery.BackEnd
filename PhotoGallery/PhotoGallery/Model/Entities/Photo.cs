@@ -19,5 +19,9 @@ namespace PhotoGallery.Model
         public List<Tag> Tags { get; set; } = new List<Tag>();
 
         public string FileMimeType { get; set; }
+
+        public ApplicationUser ApplicationUser { get; set; }
+        public String ApplicationUserId { get; set; }
+        public bool Private { get; set; } = false;
     }
 }
