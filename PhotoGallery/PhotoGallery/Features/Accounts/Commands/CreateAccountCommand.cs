@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PhotoGallery.Features.Accounts.Commands
 {
-    public class CreateAccountCommand : IRequest<string>
+    public class CreateAccountCommand : IRequest<Guid>
     {
         public string UserName { get; set; }
         public string Password { get; set; }
@@ -18,14 +18,14 @@ namespace PhotoGallery.Features.Accounts.Commands
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, string>
+        public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, Guid>
         {
             private readonly UserManager<ApplicationUser> _userManager;
             public CreateAccountCommandHandler(UserManager<ApplicationUser> userManager)
             {
                 _userManager = userManager;
             }
-            public async Task<string> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
+            public async Task<Guid> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.FindByNameAsync(request.UserName);
                 if (user != null)
@@ -42,7 +42,7 @@ namespace PhotoGallery.Features.Accounts.Commands
                 var newUser = new ApplicationUser { UserName = request.UserName, Email = request.Email, FirsName = request.FirstName, LastName = request.LastName };
                 var result = await _userManager.CreateAsync(newUser, request.Password);
                 if (result.Succeeded)
-                    return newUser.Id;
+                    return Guid.Parse(newUser.Id);
                 else
                     throw new CreateNewUserException(result.Errors);
 
