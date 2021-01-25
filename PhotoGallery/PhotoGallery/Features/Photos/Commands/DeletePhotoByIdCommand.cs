@@ -12,6 +12,7 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
     public class DeletePhotoByIdCommand : IRequest<Unit>
     {
         public Guid Id { get; set; }
+        public string UserId { get; set; }
 
         public class DeletePhotoByIdCommandHandler : IRequestHandler<DeletePhotoByIdCommand, Unit>
         {
@@ -26,6 +27,9 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
 
                 if (photo == null) 
                     throw new PhotoNotFoundException(command.Id);
+
+                if (photo.ApplicationUserId != command.UserId)
+                    throw new NoDeleteRightsException("You have no rights to delete other people's photos");
 
                 _context.Photos.Remove(photo);
                 await _context.SaveChangesAsync(cancellationToken);

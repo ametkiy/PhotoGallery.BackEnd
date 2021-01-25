@@ -18,7 +18,9 @@ namespace PhotoGallery.Configurations
             CreateMap<Album, AlbumDto>();
             CreateMap<AlbumDto, Album>();
 
-            CreateMap<Photo, PhotoDto>(); 
+            CreateMap<Photo, PhotoDto>()
+                .ForMember(p => p.FirstName, s => s.MapFrom(v => v.ApplicationUser.FirsName))
+                .ForMember(p => p.LastName, s => s.MapFrom(v => v.ApplicationUser.LastName));
             CreateMap<PhotoDto, Photo>();
             CreateMap<UpdatePhotoCommand, Photo>().ForMember(c => c.Tags, act => act.Ignore());
 

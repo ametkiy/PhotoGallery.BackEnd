@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhotoGallery.Data;
 
 namespace PhotoGallery.Migrations
 {
     [DbContext(typeof(PhotoGalleryContext))]
-    partial class PhotoGalleryContextModelSnapshot : ModelSnapshot
+    [Migration("20210115143609_OpenIddict")]
+    partial class OpenIddict
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -395,14 +397,6 @@ namespace PhotoGallery.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("FirsName")
-                        .HasMaxLength(80)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastName")
-                        .HasMaxLength(80)
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
 
@@ -476,9 +470,6 @@ namespace PhotoGallery.Migrations
                     b.Property<Guid?>("AlbumId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
@@ -495,14 +486,9 @@ namespace PhotoGallery.Migrations
                     b.Property<byte[]>("PhotoData")
                         .HasColumnType("BLOB");
 
-                    b.Property<bool>("Private")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AlbumId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Photos");
                 });
@@ -619,14 +605,7 @@ namespace PhotoGallery.Migrations
                         .HasForeignKey("AlbumId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("PhotoGallery.Model.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany("Photos")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
                     b.Navigation("Album");
-
-                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("PhotoTag", b =>
@@ -657,11 +636,6 @@ namespace PhotoGallery.Migrations
                 });
 
             modelBuilder.Entity("PhotoGallery.Model.Album", b =>
-                {
-                    b.Navigation("Photos");
-                });
-
-            modelBuilder.Entity("PhotoGallery.Model.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("Photos");
                 });

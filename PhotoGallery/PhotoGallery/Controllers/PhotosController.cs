@@ -1,26 +1,34 @@
 ﻿using LightQuery.Client;
 using LightQuery.EntityFrameworkCore;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OpenIddict.Validation.AspNetCore;
 using PhotoGallery.Features.PhotoFeatures.Commands;
 using PhotoGallery.Features.PhotoFeatures.Queries;
 using PhotoGallery.Features.Photos.Queries;
 using PhotoGallery.Model.DTO;
+using PhotoGallery.Model.Entities;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PhotoGallery.Controllers
 {
     [ApiController]
     [Route("/api/photos")]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class PhotosController : Controller
     {
         private IMediator _mediator;
+        private UserManager<ApplicationUser> _userManager;
 
-        public PhotosController(IMediator mediator)
+        public PhotosController(IMediator mediator, UserManager<ApplicationUser> userManager)
         {
             this._mediator = mediator;
+            this._userManager = userManager;
         }
 
         [AsyncLightQuery(forcePagination: false, defaultPageSize: 10)]
@@ -28,7 +36,8 @@ namespace PhotoGallery.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(new GetPhotosQuery { });
+            var userId = _userManager.GetUserId(this.User);
+            var result = await _mediator.Send(new GetPhotosQuery { UserId= userId });
             return Ok(result);
         }
 
@@ -51,7 +60,8 @@ namespace PhotoGallery.Controllers
         [HttpPost, DisableRequestSizeLimit]
         public async Task<IActionResult> Create([FromForm] IFormFileCollection Files, [FromForm] Guid? AlbumId)
         {
-            var result = (await _mediator.Send(new CreatePhotoCommand { FormFiles = Files, AlbumId = AlbumId })); ;
+            var userId = _userManager.GetUserId(this.User);
+            var result = (await _mediator.Send(new CreatePhotoCommand { FormFiles = Files, AlbumId = AlbumId, UserId = userId })) ; ;
             return Ok(result);
         }
 
@@ -66,7 +76,8 @@ namespace PhotoGallery.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _mediator.Send(new DeletePhotoByIdCommand { Id = id });
+            var userId = _userManager.GetUserId(this.User);
+            var result = await _mediator.Send(new DeletePhotoByIdCommand { Id = id, UserId = userId });
             return Ok(result);
         }
     }

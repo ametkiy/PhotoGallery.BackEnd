@@ -17,6 +17,7 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
     {
         public IFormFileCollection FormFiles;
         public Guid? AlbumId { get; set; }
+        public String UserId { get; set; }
 
         public class CreatePhotoCommandHandler : IRequestHandler<CreatePhotoCommand, IEnumerable<Guid>>
         {
@@ -43,6 +44,7 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
                         photo.PhotoData = fileBytes;
                         photo.AddDate = DateTime.Now;
                         photo.FileMimeType = fileMimeType;
+                        photo.ApplicationUserId = command.UserId;
                         if (command.AlbumId != Guid.Empty)
                             photo.AlbumId = command.AlbumId;
 
