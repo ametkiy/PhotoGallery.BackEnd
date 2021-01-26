@@ -39,7 +39,7 @@ namespace PhotoGallery.Features.Accounts.Commands
                     throw new ConflictNewUserException($"An account has already been registered for this email '{request.Email}'.");
                 }
 
-                var newUser = new ApplicationUser { UserName = request.UserName, Email = request.Email, FirsName = request.FirstName, LastName = request.LastName };
+                var newUser = new ApplicationUser { UserName = request.UserName, Email = request.Email, FirstName = request.FirstName, LastName = request.LastName };
                 var result = await _userManager.CreateAsync(newUser, request.Password);
                 if (result.Succeeded)
                     return Guid.Parse(newUser.Id);

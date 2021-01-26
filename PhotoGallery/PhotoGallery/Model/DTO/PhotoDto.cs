@@ -19,5 +19,6 @@ namespace PhotoGallery.Model.DTO
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string UserId { get; set; }
     }
 }

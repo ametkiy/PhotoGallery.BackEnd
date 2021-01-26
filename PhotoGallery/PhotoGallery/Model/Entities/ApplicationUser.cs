@@ -5,7 +5,7 @@ namespace PhotoGallery.Model.Entities
 {
     public class ApplicationUser : IdentityUser 
     {
-        public string FirsName { get; set; }
+        public string FirstName { get; set; }
         public string LastName { get; set; }
 
         public List<Photo> Photos { get; set; }

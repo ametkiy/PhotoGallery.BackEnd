@@ -60,7 +60,7 @@ namespace PhotoGallery.Data
 
 
             modelBuilder.Entity<ApplicationUser>()
-                .Property(p => p.FirsName).HasMaxLength(80);
+                .Property(p => p.FirstName).HasMaxLength(80);
 
             modelBuilder.Entity<ApplicationUser>()
                 .Property(p => p.LastName).HasMaxLength(80);
