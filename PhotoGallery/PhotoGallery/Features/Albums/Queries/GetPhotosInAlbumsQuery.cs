@@ -14,10 +14,12 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
     public class GetPhotosInAlbumsQuery : IRequest<IQueryable<PhotoDto>>
     {
         public Guid? AlbumId { get; set; }
+        public string UserId { get; set; }
         public class GetPaginationPhotosInAlbumsQueryHandler : IRequestHandler<GetPhotosInAlbumsQuery, IQueryable<PhotoDto>>
         {
             private readonly IPhotoGalleryContext _context;
             private readonly IMapper _mapper;
+
             public GetPaginationPhotosInAlbumsQueryHandler(IPhotoGalleryContext context, IMapper mapper)
             {
                 _context = context;
@@ -29,12 +31,12 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
                 if (request.AlbumId == Guid.Empty)
                     photoListQuery = _context.Photos.AsNoTracking()
                         .OrderBy(p => p.AddDate)
-                        .Where(p => !p.AlbumId.HasValue)
+                        .Where(p => !p.AlbumId.HasValue && (p.ApplicationUserId.Equals(request.UserId) || p.Private == false))
                         .ProjectTo<PhotoDto>(_mapper.ConfigurationProvider);
                 else
                     photoListQuery = _context.Photos.AsNoTracking()
                         .OrderBy(p => p.AddDate)
-                        .Where(p => p.AlbumId == request.AlbumId)
+                        .Where(p => p.AlbumId == request.AlbumId && (p.ApplicationUserId.Equals(request.UserId) || p.Private == false))
                         .ProjectTo<PhotoDto>(_mapper.ConfigurationProvider);
 
                 return Task.FromResult(photoListQuery);

@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
 using PhotoGallery.Data;
 using PhotoGallery.Features.Accounts.Commands;
+using PhotoGallery.Features.Accounts.Notifications;
 using PhotoGallery.Model.DTO;
 using PhotoGallery.Model.Entities;
 using System;
@@ -41,6 +42,7 @@ namespace PhotoGallery.Controllers
         public async Task<IActionResult> Create(CreateAccountCommand command)
         {
             var result = await _mediator.Send(command);
+            await _mediator.Publish(new NewUserNotification { ID = result });
             return Ok(result);
         }
 
@@ -52,5 +54,24 @@ namespace PhotoGallery.Controllers
             return Ok(userInfoDto);
         }
 
+        [AllowAnonymous]
+        [HttpGet("confirmationCode")]
+        public async Task<IActionResult> CheckEmailConfirmationCode(string id, string code)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return RedirectToAction("http://localhost:4200/error");
+            }
+
+            code = code.Replace(" ", "+");
+
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded)
+                return RedirectToAction("http://localhost:4200/");
+            else
+                return View("http://localhost:4200/");
+        }
     }
 }

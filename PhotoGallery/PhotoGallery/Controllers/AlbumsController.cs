@@ -2,12 +2,14 @@
 using LightQuery.EntityFrameworkCore;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
 using PhotoGallery.Features.AlbumFeatures.Commands;
 using PhotoGallery.Features.AlbumFeatures.Queries;
 using PhotoGallery.Features.PhotoFeatures.Queries;
 using PhotoGallery.Model.DTO;
+using PhotoGallery.Model.Entities;
 using System;
 using System.Threading.Tasks;
 
@@ -19,10 +21,12 @@ namespace PhotoGallery.Controllers
     public class AlbumsController : ControllerBase
     {
         private IMediator _mediator;
+        private UserManager<ApplicationUser> _userManager;
 
-        public AlbumsController(IMediator mediator)
+        public AlbumsController(IMediator mediator, UserManager<ApplicationUser> userManager)
         {
             this._mediator = mediator;
+            this._userManager = userManager;
         }
 
         [HttpGet]
@@ -44,7 +48,8 @@ namespace PhotoGallery.Controllers
         [HttpGet("{id}/photos")]
         public async Task<IActionResult> GetByAlbumId(Guid id)
         {
-            var result = await _mediator.Send(new GetPhotosInAlbumsQuery { AlbumId = id });
+            var userId = _userManager.GetUserId(this.User);
+            var result = await _mediator.Send(new GetPhotosInAlbumsQuery { AlbumId = id, UserId= userId });
             return Ok(result);
         }
 

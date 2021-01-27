@@ -33,3 +33,5 @@ ipch/
 PhotoGallery/.vs/PhotoGallery/DesignTimeBuild/.dtbcache.v2
 PhotoGallery/PhotoGallery/PhotoGallery.db
 PhotoGallery/.vs/PhotoGallery/DesignTimeBuild/.dtbcache.v2
+PhotoGallery/PhotoGallery/PhotoGallery.db-shm
+PhotoGallery/PhotoGallery/PhotoGallery.db-wal

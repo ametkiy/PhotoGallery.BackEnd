@@ -22,6 +22,7 @@ namespace PhotoGallery.Features.PhotoFeatures.Commands
         public string Description { get; set; }
         public Guid? AlbumId { get; set; }
         public List<TagShort> Tags { get; set; } 
+        public bool Private { get; set; }
         public class UpdatePhotoCommandHandler : IRequestHandler<UpdatePhotoCommand, Guid>
         {
             private readonly IPhotoGalleryContext _context;
