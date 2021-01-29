@@ -12,6 +12,8 @@ namespace PhotoGallery.Data
         public DbSet<Album> Albums { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Like> Likes { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public PhotoGalleryContext(DbContextOptions<PhotoGalleryContext> options)
                 : base(options)
@@ -38,18 +40,28 @@ namespace PhotoGallery.Data
             modelBuilder.Entity<Photo>()
                 .Property(p => p.FileMimeType).IsRequired().HasMaxLength(255);
             modelBuilder.Entity<Photo>()
-                .HasOne<Album>(p => p.Album)
+                .HasOne(p => p.Album)
                 .WithMany(t => t.Photos)
                 .HasForeignKey(p => p.AlbumId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Photo>()
-                .HasMany<Tag>(t => t.Tags)
+                .HasMany(p => p.Likes)
+                .WithOne(l => l.Photo)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.Likes)
+                .WithOne(l => l.User)
+                .OnDelete(DeleteBehavior.Cascade); 
+
+            modelBuilder.Entity<Photo>()
+                .HasMany(t => t.Tags)
                 .WithMany(a => a.Photos)
                 .UsingEntity(u => u.ToTable("PhotosTags"));
 
             modelBuilder.Entity<Photo>()
-                .HasOne<ApplicationUser>(p => p.ApplicationUser)
+                .HasOne(p => p.ApplicationUser)
                 .WithMany(u => u.Photos)
                 .HasForeignKey(p => p.ApplicationUserId)
                 .OnDelete(DeleteBehavior.ClientCascade); ;
@@ -58,6 +70,8 @@ namespace PhotoGallery.Data
                 .ToTable("Tags").HasKey(p => p.Id);
             modelBuilder.Entity<Tag>().Property(t => t.Name).IsRequired().HasMaxLength(100);
 
+            modelBuilder.Entity<Like>()
+                .ToTable("Likes").HasKey(p => p.Id);
 
             modelBuilder.Entity<ApplicationUser>()
                 .Property(p => p.FirstName).HasMaxLength(80);

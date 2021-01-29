@@ -20,5 +20,6 @@ namespace PhotoGallery.Model.DTO
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string UserId { get; set; }
+        public int LikesCount { get; set; } = -1;
     }
 }

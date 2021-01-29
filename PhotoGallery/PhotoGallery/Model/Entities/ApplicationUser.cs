@@ -9,5 +9,7 @@ namespace PhotoGallery.Model.Entities
         public string LastName { get; set; }
 
         public List<Photo> Photos { get; set; }
+
+        public List<Like> Likes { get; set; }
     }
 }

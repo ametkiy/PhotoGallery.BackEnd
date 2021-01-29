@@ -12,6 +12,8 @@ namespace PhotoGallery.Data
         DbSet<Album> Albums { get; set; }
         DbSet<Photo> Photos { get; set; }
         DbSet<Tag> Tags { get; set; }
+        DbSet<Like> Likes { get; set; }
+        DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 

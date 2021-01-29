@@ -5,10 +5,12 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
 using PhotoGallery.Model.Entities;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -78,7 +80,11 @@ namespace PhotoGallery.Controllers
                     claim.SetDestinations(GetDestinations(claim, principal));
                 }
 
-                return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                var resultSignIn = SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+                
+
+                return resultSignIn;
             }
 
             throw new NotImplementedException("The specified grant type is not implemented.");
@@ -87,6 +93,9 @@ namespace PhotoGallery.Controllers
         [HttpGet("~/connect/logout")]
         public async Task<IActionResult> Logout()
         {
+
+            var tmp = this.User;
+
             // Ask ASP.NET Core Identity to delete the local and external cookies created
             // when the user agent is redirected from the external identity provider
             // after a successful authentication flow (e.g Google or Facebook).

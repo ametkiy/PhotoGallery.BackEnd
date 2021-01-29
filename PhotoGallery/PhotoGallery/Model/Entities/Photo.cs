@@ -23,5 +23,7 @@ namespace PhotoGallery.Model
         public ApplicationUser ApplicationUser { get; set; }
         public String ApplicationUserId { get; set; }
         public bool Private { get; set; } = false;
+
+        public List<Like> Likes { get; set; } = new List<Like>();
     }
 }

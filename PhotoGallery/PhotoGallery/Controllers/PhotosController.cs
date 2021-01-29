@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
 using PhotoGallery.Features.PhotoFeatures.Commands;
 using PhotoGallery.Features.PhotoFeatures.Queries;
+using PhotoGallery.Features.Photos.Commands;
 using PhotoGallery.Features.Photos.Queries;
 using PhotoGallery.Model.DTO;
 using PhotoGallery.Model.Entities;

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PhotoGallery.Data;
 using PhotoGallery.Model.DTO;
-using PhotoGallery.Model.Entities;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +20,7 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
             private readonly IPhotoGalleryContext _context;
             private readonly IMapper _mapper;
 
-            public GetAllPhotosQueryHandler(IPhotoGalleryContext context, IMapper mapper, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+            public GetAllPhotosQueryHandler(IPhotoGalleryContext context, IMapper mapper)
             {
                 _context = context;
                 _mapper = mapper;
@@ -29,9 +28,9 @@ namespace PhotoGallery.Features.PhotoFeatures.Queries
             public Task<IQueryable<PhotoDto>> Handle(GetPhotosQuery request, CancellationToken cancellationToken)
             {
                 IQueryable<PhotoDto> photoListQuery = _context.Photos.AsNoTracking()
-                    .Include(p=>p.ApplicationUser)
+                    .Include(p => p.ApplicationUser)
                     .OrderBy(p => p.AddDate)
-                    .Where(p => p.ApplicationUserId.Equals(request.UserId) || p.Private==false)
+                    .Where(p => p.ApplicationUserId.Equals(request.UserId) || p.Private == false)
                     .ProjectTo<PhotoDto>(_mapper.ConfigurationProvider);
 
                 return Task.FromResult(photoListQuery);

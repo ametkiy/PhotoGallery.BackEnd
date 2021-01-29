@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
 using PhotoGallery.Features.PhotoFeatures.Queries;
 using PhotoGallery.Features.Tags.Commands;
+using PhotoGallery.Features.Tags.Queries;
 using PhotoGallery.Features.Tags.Query;
 using PhotoGallery.Model.DTO;
 using System;
@@ -43,6 +44,14 @@ namespace PhotoGallery.Controllers
         public async Task<IActionResult> GetTagByName(string name)
         {
             var result = await _mediator.Send(new GetTagByNameQuery { Name = name });
+            return Ok(result);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetTags()
+        {
+            var result = await _mediator.Send(new GetTags());
             return Ok(result);
         }
 
